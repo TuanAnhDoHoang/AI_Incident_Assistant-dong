@@ -43,9 +43,9 @@ aia:
   possible-duplicate-threshold: 0.60
   mention-only-mode: false
   gemini:
-    api-key: ${GEMINI_API_KEY:AIzaSyDK-34ZEICmX-zfNfZ4NyA_mg1feVKljY0}
+    api-key: ${GEMINI_API_KEY:AIzaSyCy_DNNKqekseA04V9f40oJqW7sXFefc_c}
     enabled: true
-    model: gemini-3-flash-preview
+    model: ${GEMINI_MODEL:gemini-3.1-flash-lite-preview}
   telegram:
     bot-secret-token: ${TELEGRAM_BOT_SECRET_TOKEN:8586011264:AAHo6fQBZbw-Q4hHZKzxQUlx-f0PmSQ-kxs}
   jira:
