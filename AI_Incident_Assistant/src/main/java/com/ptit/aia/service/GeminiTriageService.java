@@ -1,10 +1,14 @@
 package com.ptit.aia.service;
 
+import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.ptit.aia.config.AiaProperties;
 import com.ptit.aia.domain.Severity;
 import com.ptit.aia.dto.TriageResult;
+import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +33,12 @@ public class GeminiTriageService {
         this.webClient = WebClient.builder()
                 .codecs(cfg -> cfg.defaultCodecs().maxInMemorySize(2 * 1024 * 1024))
                 .build();
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = JsonMapper.builder()
+                .enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES)
+                .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
+                .enable(JsonReadFeature.ALLOW_TRAILING_COMMA)
+                .enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
+                .build();
     }
 
     /**
@@ -41,6 +50,11 @@ public class GeminiTriageService {
             return null;
         }
 
+        if (!supportsTextTriageModel(cfg.getModel())) {
+            log.warn("[Gemini] Model '{}' không phù hợp triage text (ví dụ model TTS), fallback rule-based", cfg.getModel());
+            return null;
+        }
+
         String prompt = buildPrompt(text);
         Map<String, Object> body = Map.of(
                 "contents", new Object[]{
@@ -48,11 +62,13 @@ public class GeminiTriageService {
                 },
                 "generationConfig", Map.of(
                         "temperature", 0.1,
-                        "maxOutputTokens", 512
+                        "maxOutputTokens", 512,
+                        "responseMimeType", "application/json"
                 )
         );
 
         try {
+            log.info("[Gemini] Gọi model={} inputLength={}", cfg.getModel(), text.length());
             String response = webClient.post()
                     .uri(GEMINI_URL, cfg.getModel(), cfg.getApiKey())
                     .header("Content-Type", "application/json")
@@ -63,7 +79,7 @@ public class GeminiTriageService {
 
             return parseResponse(response, text);
         } catch (Exception e) {
-            log.warn("[Gemini] Lỗi khi gọi API, sẽ fallback về rule-based: {}", e.getMessage());
+            log.warn("[Gemini] Lỗi khi gọi API model={} - type={} - message={}", cfg.getModel(), e.getClass().getSimpleName(), e.getMessage());
             return null;
         }
     }
@@ -100,18 +116,12 @@ public class GeminiTriageService {
     private TriageResult parseResponse(String rawJson, String originalText) {
         try {
             JsonNode root = objectMapper.readTree(rawJson);
-            String content = root
-                    .path("candidates").get(0)
-                    .path("content").path("parts").get(0)
-                    .path("text").asText();
-
-            // Clean up markdown code blocks if Gemini wraps in ```json
-            content = content.strip();
-            if (content.startsWith("```")) {
-                content = content.replaceAll("```[a-z]*\\n?", "").replaceAll("```", "").strip();
+            String jsonPayload = extractJsonPayloadFromParts(root);
+            if (jsonPayload.isBlank()) {
+                log.warn("[Gemini] Không trích được JSON hợp lệ từ response model={}, fallback rule-based", properties.getGemini().getModel());
+                return null;
             }
-
-            JsonNode result = objectMapper.readTree(content);
+            JsonNode result = objectMapper.readTree(jsonPayload);
 
             boolean isBug = result.path("is_bug_report").asBoolean(false);
             double confidence = result.path("confidence").asDouble(0.5);
@@ -139,5 +149,80 @@ public class GeminiTriageService {
             log.warn("[Gemini] Không parse được JSON response, fallback rule-based. Error: {}", e.getMessage());
             return null;
         }
+    }
+
+    private String extractJsonPayloadFromParts(JsonNode root) {
+        JsonNode parts = root.path("candidates").path(0).path("content").path("parts");
+        if (!parts.isArray()) {
+            log.warn("[Gemini] Parts không phải array: {}", root);
+            return "";
+        }
+
+        int partIndex = 0;
+        Iterator<JsonNode> iterator = parts.elements();
+        while (iterator.hasNext()) {
+            String content = normalizeContent(iterator.next().path("text").asText(""));
+            String preview = content.length() > 300 ? content.substring(0, 300) + "..." : content;
+            log.info("[Gemini] Part[{}] preview ({} chars): {}", partIndex, content.length(), preview);
+            partIndex++;
+
+            String candidate = extractFirstJsonObject(content);
+            if (candidate.isBlank()) {
+                continue;
+            }
+            try {
+                objectMapper.readTree(candidate);
+                log.info("[Gemini] JSON hợp lệ tìm thấy ở part[{}]", partIndex - 1);
+                return candidate;
+            } catch (Exception e) {
+                log.info("[Gemini] Part[{}] có JSON nhưng parse lỗi: {}", partIndex - 1, e.getMessage());
+            }
+        }
+
+        log.warn("[Gemini] Tất cả {} parts đã duyệt, không tìm được JSON hợp lệ", partIndex);
+        return "";
+    }
+
+    private String normalizeContent(String content) {
+        String normalized = content.strip();
+        if (normalized.contains("```")) {
+            normalized = normalized.replaceAll("```[a-zA-Z]*\\n?", "").replace("```", "").strip();
+        }
+        return normalized;
+    }
+
+    boolean supportsTextTriageModel(String model) {
+        if (model == null) return false;
+        String m = model.toLowerCase(Locale.ROOT);
+        if (m.contains("tts") || m.contains("speech") || m.contains("audio")) return false;
+        if (m.contains("image") || m.contains("vision") || m.contains("video")) return false;
+        return true;
+    }
+
+    private String extractFirstJsonObject(String text) {
+        int jsonStart = text.indexOf("{");
+        if (jsonStart < 0) {
+            return "";
+        }
+
+        String candidate = text.substring(jsonStart);
+        int braceCount = 0;
+        boolean inString = false;
+        for (int i = 0; i < candidate.length(); i++) {
+            char ch = candidate.charAt(i);
+            if (ch == '"' && (i == 0 || candidate.charAt(i - 1) != '\\')) {
+                inString = !inString;
+            } else if (!inString) {
+                if (ch == '{') braceCount++;
+                else if (ch == '}') {
+                    braceCount--;
+                    if (braceCount == 0) {
+                        return candidate.substring(0, i + 1).trim();
+                    }
+                }
+            }
+        }
+
+        return "";
     }
 }

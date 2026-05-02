@@ -51,8 +51,9 @@ public class TriageService {
         double score = 0.05;
         String[] keywords = {"loi", "bug", "error", "fail", "failed", "khong vao", "crash",
                 "500", "payment", "thanh toan", "login", "dang nhap", "khong duoc",
-                "lỗi", "không vào", "thanh toán", "đăng nhập", "không được", "sập", 
-                "trắng xóa", "timeout", "hỏng", "chết", "chậm"};
+                "lỗi", "không vào", "thanh toán", "đăng nhập", "không được", "sập",
+                "trắng xóa", "timeout", "hỏng", "chết", "chậm", "jdbcconnectionexception",
+                "unable to acquire jdbc connection", "pool connection", "sập server", "mất dữ liệu"};
         for (String keyword : keywords) {
             if (text.contains(keyword)) {
                 score += 0.35; // Tăng trọng số mỗi từ khóa để bù lại khi AI chết
@@ -67,10 +68,12 @@ public class TriageService {
 
     private Severity detectSeverity(String text) {
         if (text.contains("payment") || text.contains("thanh toán") || text.contains("mat du lieu")
-                || text.contains("down") || text.contains("toan bo") || text.contains("toàn bộ")
+                || text.contains("mất dữ liệu") || text.contains("down") || text.contains("toan bo") || text.contains("toàn bộ")
                 || text.contains("loi thanh toan") || text.contains("lỗi thanh toán")
-                || text.contains("sập") || text.contains("500") || text.contains("trắng xóa")
-                || text.contains("không làm việc được") || text.contains("gấp")) {
+                || text.contains("sập") || text.contains("sập server") || text.contains("500") || text.contains("trắng xóa")
+                || text.contains("không làm việc được") || text.contains("gấp")
+                || text.contains("jdbcconnectionexception") || text.contains("unable to acquire jdbc connection")
+                || text.contains("pool connection")) {
             return Severity.P1;
         }
         if (text.contains("nhieu user") || text.contains("many users") || text.contains("không login")
@@ -82,6 +85,8 @@ public class TriageService {
     }
 
     private String detectComponent(String text) {
+        if (text.contains("jdbcconnectionexception") || text.contains("pool connection") || text.contains("unable to acquire jdbc connection")) return "Database";
+        if (text.contains("sập server") || text.contains("mất dữ liệu") || text.contains("mat du lieu")) return "Infrastructure";
         if (text.contains("login") || text.contains("dang nhap") || text.contains("đăng nhập")) return "Login";
         if (text.contains("payment") || text.contains("thanh toan") || text.contains("thanh toán")) return "Payment";
         if (text.contains("api") || text.contains("500")) return "Backend/API";
