@@ -97,4 +97,6 @@ The MVP scope is intentionally small: **text-only**, **1 Jira project**, and **s
 ---
 
 ## License
-Internal Hackathon Demo / Educational Use Only
+Internal Hackathon Demo / Educational Use Only 
+Demo sử dụng nội bộ hackathon
+
