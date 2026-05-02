@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#c6c6cd",
+                    "tertiary-fixed": "#c4e7ff",
+                    "inverse-primary": "#565e74",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#010f1f",
+                    "surface-container-highest": "#273647",
+                    "on-tertiary-fixed": "#001e2c",
+                    "secondary-fixed-dim": "#3cddc7",
+                    "secondary-container": "#03c6b2",
+                    "tertiary-fixed-dim": "#7bd0ff",
+                    "on-secondary-fixed-variant": "#005047",
+                    "tertiary-container": "#001a27",
+                    "outline": "#909097",
+                    "inverse-on-surface": "#233143",
+                    "on-background": "#d4e4fa",
+                    "primary-fixed": "#dae2fd",
+                    "surface-tint": "#bec6e0",
+                    "primary-container": "#0f172a",
+                    "on-primary-fixed": "#131b2e",
+                    "surface-container-low": "#0d1c2d",
+                    "on-tertiary": "#00354a",
+                    "primary": "#bec6e0",
+                    "tertiary": "#7bd0ff",
+                    "inverse-surface": "#d4e4fa",
+                    "primary-fixed-dim": "#bec6e0",
+                    "surface": "#051424",
+                    "secondary": "#44e2cd",
+                    "surface-variant": "#273647",
+                    "on-secondary-fixed": "#00201c",
+                    "on-secondary": "#003731",
+                    "on-primary-container": "#798098",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "surface-container-high": "#1c2b3c",
+                    "background": "#051424",
+                    "on-primary": "#283044",
+                    "on-surface": "#d4e4fa",
+                    "on-error": "#690005",
+                    "error-container": "#93000a",
+                    "surface-bright": "#2c3a4c",
+                    "on-tertiary-container": "#008abb",
+                    "surface-container": "#122131",
+                    "on-tertiary-fixed-variant": "#004c69",
+                    "outline-variant": "#45464d",
+                    "surface-dim": "#051424",
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed": "#62fae3",
+                    "on-secondary-container": "#004d44"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "stack-md": "12px",
+                    "stack-sm": "4px",
+                    "gutter": "16px",
+                    "stack-lg": "24px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "h2": ["Space Grotesk"],
+                    "body-md": ["Inter"],
+                    "mono-code": ["Space Grotesk"],
+                    "body-sm": ["Inter"],
+                    "h1": ["Space Grotesk"],
+                    "body-lg": ["Inter"],
+                    "h3": ["Space Grotesk"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "h2": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "mono-code": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "h1": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .service-card-active {
+            border-top: 2px solid #44e2cd;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<nav class="hidden lg:flex flex-col fixed left-0 top-0 h-full z-40 bg-slate-950/50 backdrop-blur-2xl text-teal-400 font-['Space_Grotesk'] text-sm font-medium h-screen w-64 border-r border-white/10 rounded-none flat no shadows">
+<div class="p-6">
+<h1 class="text-lg font-black text-white">IncidentX Console</h1>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest mt-1">System Operational</p>
+</div>
+<div class="flex-1 mt-4">
+<a class="flex items-center gap-3 text-slate-400 hover:bg-white/5 px-6 py-3 cursor-pointer transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- ACTIVE STATE: Services -->
+<a class="flex items-center gap-3 bg-teal-500/10 text-teal-400 border-l-4 border-teal-400 px-6 py-3 cursor-pointer transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<span>Services</span>
+</a>
+<a class="flex items-center gap-3 text-slate-400 hover:bg-white/5 px-6 py-3 cursor-pointer transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="emergency_share">emergency_share</span>
+<span>Incidents</span>
+</a>
+<a class="flex items-center gap-3 text-slate-400 hover:bg-white/5 px-6 py-3 cursor-pointer transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Team</span>
+</a>
+<a class="flex items-center gap-3 text-slate-400 hover:bg-white/5 px-6 py-3 cursor-pointer transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</div>
+<div class="p-6 mt-auto">
+<button class="w-full py-3 px-4 bg-teal-500 text-slate-950 font-bold rounded-lg flex items-center justify-center gap-2 hover:shadow-[0_0_15px_rgba(68,226,205,0.4)] transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add_alert">add_alert</span>
+                Report Incident
+            </button>
+<div class="mt-8 space-y-4">
+<a class="flex items-center gap-3 text-slate-500 hover:text-teal-300 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span>Documentation</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 hover:text-teal-300 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+<span>Support</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="lg:pl-64 flex flex-col md:flex-row min-h-screen">
+<!-- Left Section: Service Overview & Apps Grid -->
+<div class="flex-1 p-8 md:p-12 lg:p-16 max-w-5xl">
+<!-- Service Header -->
+<div class="flex flex-col items-start gap-6 mb-12">
+<div class="w-24 h-24 rounded-2xl glass-panel p-4 flex items-center justify-center border-t-2 border-secondary overflow-hidden">
+<img alt="Google" class="w-full h-full object-contain" data-alt="A clean, high-resolution 3D glassmorphic representation of the Google 'G' logo. The icon is rendered with soft translucent textures and refractive edges, floating in a dark technical environment with teal ambient lighting. The background features subtle digital grit and bokeh circles in deep navy and vibrant cyan hues, creating a sense of high-end corporate reliability and modern tech sophistication." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVvhohI3cGXGO3uByDkIH15D9m9FhmHM6nTvLf_oqs17sPWPQvbPcRP3Uu1JgX6TOE79-7CTu3bORLA1EpqaR22BsgjnypCMZ9FjirGVLa_TKtYGx0NiP-HWaGhhggIjYDDgpeV98fZ9VSX1SJFQ7ugt7RXrmyRpFXYkTpkQcgYh9WNfnfgBiU8engGScGsqxSMAdrSvNLxIGvkhLcV1VOMG5KA0c3M7ynXdEqLq-KsTZlRJZmE31OdP2d6p_VNIUgBX0YPDbU3bgc"/>
+</div>
+<div>
+<div class="flex items-center gap-4">
+<h1 class="font-h1 text-h1 text-on-surface">Google Cloud</h1>
+<span class="px-3 py-1 bg-secondary/10 text-secondary border border-secondary/20 rounded-full font-label-caps text-label-caps flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                            OPERATIONAL
+                        </span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2 max-w-2xl">
+                        Integrated ecosystem for computing, storage, and intelligence. Managed enterprise suite for high-availability deployments and collaborative data pipelines.
+                    </p>
+</div>
+</div>
+<!-- Apps Grid Section -->
+<div>
+<div class="flex items-center justify-between mb-8">
+<h2 class="font-h3 text-h3 text-on-surface">Integrated Ecosystem</h2>
+<div class="flex gap-2">
+<button class="p-2 glass-panel rounded-lg hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="grid_view">grid_view</span>
+</button>
+<button class="p-2 glass-panel rounded-lg hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="view_list">view_list</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- App Card 1 -->
+<div class="glass-panel p-6 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 glass-panel rounded-lg p-2 flex items-center justify-center border-t border-secondary/50">
+<span class="material-symbols-outlined text-secondary" data-icon="cloud_queue">cloud_queue</span>
+</div>
+<span class="font-mono-code text-label-caps text-secondary">ACTIVE</span>
+</div>
+<h3 class="font-h3 text-body-lg text-on-surface mb-1">Google Drive</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Centralized cloud storage and file synchronization for teams.</p>
+<div class="pt-4 border-t border-white/5 flex items-center justify-between">
+<span class="text-xs text-on-surface-variant">4.2 TB used</span>
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- App Card 2 -->
+<div class="glass-panel p-6 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 glass-panel rounded-lg p-2 flex items-center justify-center border-t border-secondary/50">
+<span class="material-symbols-outlined text-secondary" data-icon="smart_toy">smart_toy</span>
+</div>
+<span class="font-mono-code text-label-caps text-secondary">ACTIVE</span>
+</div>
+<h3 class="font-h3 text-body-lg text-on-surface mb-1">Gemini AI</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Advanced LLM integration for automated incident response.</p>
+<div class="pt-4 border-t border-white/5 flex items-center justify-between">
+<span class="text-xs text-on-surface-variant">API: v1.5 Pro</span>
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- App Card 3 -->
+<div class="glass-panel p-6 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer group border-t-2 border-secondary">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 glass-panel rounded-lg p-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="photo_library">photo_library</span>
+</div>
+<span class="font-mono-code text-label-caps text-secondary">SYNCING</span>
+</div>
+<h3 class="font-h3 text-body-lg text-on-surface mb-1">Google Photos</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Visual asset repository and automated image indexing.</p>
+<div class="pt-4 border-t border-white/5 flex items-center justify-between">
+<span class="text-xs text-on-surface-variant">12.5k Assets</span>
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- App Card 4 -->
+<div class="glass-panel p-6 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 glass-panel rounded-lg p-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="alternate_email">alternate_email</span>
+</div>
+<span class="font-mono-code text-label-caps text-on-surface-variant">IDLE</span>
+</div>
+<h3 class="font-h3 text-body-lg text-on-surface mb-1">Gmail Admin</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Secure communication gateway and enterprise mail server.</p>
+<div class="pt-4 border-t border-white/5 flex items-center justify-between">
+<span class="text-xs text-on-surface-variant">250 Users</span>
+<span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Add New Card -->
+<div class="border-2 border-dashed border-white/10 p-6 rounded-xl hover:border-secondary/40 transition-all cursor-pointer flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-3xl text-white/20 mb-2" data-icon="add_circle">add_circle</span>
+<p class="font-label-caps text-label-caps text-white/40">Connect New App</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Management & Profile -->
+<aside class="w-full md:w-80 lg:w-96 glass-panel border-l border-white/5 p-8 flex flex-col gap-10">
+<!-- User Service Profile -->
+<section>
+<h4 class="font-label-caps text-label-caps text-secondary mb-4 tracking-[0.2em]">MY SERVICE PROFILE</h4>
+<div class="flex items-center gap-4 mb-6">
+<div class="w-16 h-16 rounded-full glass-panel border border-secondary/30 p-1">
+<img alt="Sarah Connor" class="w-full h-full rounded-full object-cover" data-alt="A professional headshot of a middle-aged female tech executive with a confident expression. She is wearing a modern dark blazer, set against a blurred background of a high-tech server room with glowing teal and deep blue lights. The lighting is crisp and cinematic, emphasizing technical expertise and a high-stakes corporate environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ1Q57HR-LN1nzEmTQA4zIbiT8l4dH5eBTYLCcxtGqVlrtLphtxFOp5uiheEiGZLMddqa8dbEondikVaNS0FMXbGa-pg2mEwZrAbjmxhjUppkIYdyjQkH-BwSjtoNm0BOZhqOAfcGCWc8dALTu3jHy_J2lf1cXGMzoglopVxra8HXZiqAI1E5zBiCqSyFKSf3q5bkMz0miACwOe-QbO9nVCKBaCO3YIXheorw8sD7yDOQL0cFAOd0bWV_PicBR5zyhmyEbA1wQGar-"/>
+</div>
+<div>
+<p class="font-h3 text-body-lg text-on-surface">Alex Rivera</p>
+<p class="text-xs text-on-surface-variant">Lead Cloud Architect</p>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-xs p-2 glass-panel rounded">
+<span class="text-on-surface-variant">Access Level</span>
+<span class="text-secondary">Root Admin</span>
+</div>
+<div class="flex justify-between text-xs p-2 glass-panel rounded">
+<span class="text-on-surface-variant">Token Expiry</span>
+<span class="text-on-surface">24h 12m</span>
+</div>
+</div>
+</section>
+<!-- Bot Information -->
+<section>
+<h4 class="font-label-caps text-label-caps text-secondary mb-4 tracking-[0.2em]">SERVICE AGENTS</h4>
+<div class="glass-panel rounded-xl p-4 border-l-4 border-secondary">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-secondary" data-icon="precision_manufacturing">precision_manufacturing</span>
+<span class="font-body-md font-medium text-on-surface">Auto-Scale Bot</span>
+</div>
+<p class="text-xs text-on-surface-variant mb-4">Optimizing resource allocation based on real-time traffic spikes.</p>
+<div class="bg-black/20 p-2 rounded font-mono-code text-[10px] text-teal-300">
+                        STATUS: ANALYZING_LOAD...
+                    </div>
+</div>
+</section>
+<!-- Employee Details & Management -->
+<section class="flex-1">
+<div class="flex justify-between items-center mb-4">
+<h4 class="font-label-caps text-label-caps text-secondary tracking-[0.2em]">ASSIGNED STAFF</h4>
+<span class="text-xs text-on-surface-variant">12 Active</span>
+</div>
+<div class="space-y-4 mb-8">
+<!-- Staff 1 -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-secondary">JD</div>
+<div>
+<p class="text-xs font-medium text-on-surface">Jane Doe</p>
+<p class="text-[10px] text-on-surface-variant">Security Lead</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-sm text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-error transition-all" data-icon="person_remove">person_remove</button>
+</div>
+<!-- Staff 2 -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-secondary">MK</div>
+<div>
+<p class="text-xs font-medium text-on-surface">Marcus Kane</p>
+<p class="text-[10px] text-on-surface-variant">DevOps Eng.</p>
+</div>
+</div>
+<button class="material-symbols-outlined text-sm text-on-surface-variant opacity-0 group-hover:opacity-100 hover:text-error transition-all" data-icon="person_remove">person_remove</button>
+</div>
+</div>
+<!-- Management Actions -->
+<div class="grid grid-cols-1 gap-3">
+<button class="w-full py-3 border border-secondary/40 text-secondary hover:bg-secondary/10 transition-all rounded-lg font-label-caps flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="group_add">group_add</span>
+                        Add/Remove Staff
+                    </button>
+<button class="w-full py-3 border border-on-surface-variant/20 text-on-surface-variant hover:bg-white/5 transition-all rounded-lg font-label-caps flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="supervised_user_circle">supervised_user_circle</span>
+                        Add/Remove Clients
+                    </button>
+</div>
+</section>
+</aside>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="lg:pl-64 bg-slate-950 border-t border-white/5 py-12 w-full">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center font-['Space_Grotesk'] text-xs text-slate-500">
+<div class="mb-6 md:mb-0">
+<span class="text-teal-400 font-bold">IncidentX</span>
+<span class="ml-4">© 2024 IncidentX. Built for high-stakes reliability.</span>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-500 hover:text-teal-300 transition-colors" href="#">Privacy</a>
+<a class="text-slate-500 hover:text-teal-300 transition-colors" href="#">Terms</a>
+<a class="text-slate-500 hover:text-teal-300 transition-colors" href="#">Security</a>
+<a class="text-teal-400" href="#">Status</a>
+</div>
+</div>
+</footer>
+</body></html>

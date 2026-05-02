@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(68, 226, 205, 0.1) 0%, transparent 50%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "on-surface-variant": "#c6c6cd",
+                "tertiary-fixed": "#c4e7ff",
+                "inverse-primary": "#565e74",
+                "error": "#ffb4ab",
+                "surface-container-lowest": "#010f1f",
+                "surface-container-highest": "#273647",
+                "on-tertiary-fixed": "#001e2c",
+                "secondary-fixed-dim": "#3cddc7",
+                "secondary-container": "#03c6b2",
+                "tertiary-fixed-dim": "#7bd0ff",
+                "on-secondary-fixed-variant": "#005047",
+                "tertiary-container": "#001a27",
+                "outline": "#909097",
+                "inverse-on-surface": "#233143",
+                "on-background": "#d4e4fa",
+                "primary-fixed": "#dae2fd",
+                "surface-tint": "#bec6e0",
+                "primary-container": "#0f172a",
+                "on-primary-fixed": "#131b2e",
+                "surface-container-low": "#0d1c2d",
+                "on-tertiary": "#00354a",
+                "primary": "#bec6e0",
+                "tertiary": "#7bd0ff",
+                "inverse-surface": "#d4e4fa",
+                "primary-fixed-dim": "#bec6e0",
+                "surface": "#051424",
+                "secondary": "#44e2cd",
+                "surface-variant": "#273647",
+                "on-secondary-fixed": "#00201c",
+                "on-secondary": "#003731",
+                "on-primary-container": "#798098",
+                "on-primary-fixed-variant": "#3f465c",
+                "surface-container-high": "#1c2b3c",
+                "background": "#051424",
+                "on-primary": "#283044",
+                "on-surface": "#d4e4fa",
+                "on-error": "#690005",
+                "error-container": "#93000a",
+                "surface-bright": "#2c3a4c",
+                "on-tertiary-container": "#008abb",
+                "surface-container": "#122131",
+                "on-tertiary-fixed-variant": "#004c69",
+                "outline-variant": "#45464d",
+                "surface-dim": "#051424",
+                "on-error-container": "#ffdad6",
+                "secondary-fixed": "#62fae3",
+                "on-secondary-container": "#004d44"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+              },
+              "fontFamily": {
+                "h2": ["Space Grotesk"],
+                "body-md": ["Inter"],
+                "mono-code": ["Space Grotesk"],
+                "body-sm": ["Inter"],
+                "h1": ["Space Grotesk"],
+                "body-lg": ["Inter"],
+                "h3": ["Space Grotesk"],
+                "label-caps": ["Inter"]
+              },
+              "fontSize": {
+                "h2": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "mono-code": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "h1": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "h3": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface selection:bg-secondary/30">
+<!-- TopNavBar -->
+<nav class="flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-white/10 shadow-[0_0_20px_rgba(20,184,166,0.1)] font-['Space_Grotesk'] antialiased">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold tracking-tighter text-teal-400">IncidentX</span>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Developers</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Solutions</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Pricing</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 text-slate-400 hover:text-white transition-all hover:bg-white/5 rounded-lg active:scale-95 duration-200">Sign In</button>
+<button class="px-5 py-2 bg-secondary text-on-secondary font-semibold rounded-lg hover:shadow-[0_0_15px_rgba(68,226,205,0.4)] transition-all active:scale-95 duration-200">Get Started</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="relative pt-32 pb-20 px-6 hero-gradient overflow-hidden min-h-screen flex items-center">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-7 z-10">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary font-label-caps text-label-caps mb-6">
+<span class="flex h-2 w-2 rounded-full bg-secondary animate-pulse"></span>
+                    NOW IN PRIVATE BETA
+                </div>
+<h1 class="font-h1 text-h1 text-on-surface mb-6 leading-tight">
+                    Reliability for <span class="text-secondary">High-Stakes</span> Digital Infrastructure
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-2xl">
+                    Automate incident response, visualize complex system dependencies, and resolve critical outages before they impact your customers. Built for modern DevOps at scale.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="px-8 py-4 bg-secondary text-on-secondary font-h3 text-body-md rounded-lg hover:shadow-[0_0_30px_rgba(68,226,205,0.4)] transition-all active:scale-95">Get Started</button>
+<button class="px-8 py-4 border border-secondary/50 text-secondary font-h3 text-body-md rounded-lg hover:bg-secondary/5 transition-all active:scale-95">Watch Demo</button>
+</div>
+</div>
+<div class="lg:col-span-5 relative">
+<div class="glass-card rounded-2xl p-4 overflow-hidden shadow-2xl rotate-2">
+<img class="rounded-xl opacity-90 grayscale-[0.5] hover:grayscale-0 transition-all duration-700" data-alt="A high-tech digital dashboard displayed on a semi-transparent glass panel against a dark navy background. The interface features vibrant teal line graphs, pulsing orange status indicators, and complex system topology maps. Soft neon glows and bokeh lighting effects create a professional command center aesthetic. The mood is urgent yet controlled, reflecting high-stakes incident management." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOxhOfdPfE4PZS_NmYfzIgUNwkPjv7kh5_OCYDg4_HqVo_YaIlOO-psKXa_M-cJNrIeqYHXPWEYPST3bPxMup1TPctZK2NE3PssKile9kp_9HCtQS6LtAfHxE6bwSmUDMp9aMTiJQHwxYjmoQR4xQFmyA1-yvbR1X9P5e3lb_59mVEyeDHvj6bDkqC0gqzicY6DOpNOBXDyki0x1wUpTqfNHtnuJmkBkH67N5sm_WRGqP5yiv-abjnhjO6NGiFs7febVv1-LYlxwe3"/>
+</div>
+<div class="absolute -bottom-6 -left-6 glass-card p-4 rounded-xl shadow-2xl -rotate-3 border-secondary/30">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error" data-icon="emergency_share">emergency_share</span>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">CRITICAL INCIDENT</p>
+<p class="font-mono-code text-mono-code text-error">Database Latency +240%</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works (Bento Grid) -->
+<section class="py-24 px-6 bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-h2 text-h2 text-on-surface mb-4">How it works</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">IncidentX bridges the gap between monitoring and resolution with an autonomous orchestration engine.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Step 1 -->
+<div class="glass-card p-8 rounded-2xl border-t-2 border-t-secondary/50">
+<div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary" data-icon="hub">hub</span>
+</div>
+<h3 class="font-h3 text-h3 mb-4">Ingest</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Connect your entire stack—AWS, Kubernetes, Datadog—in minutes. We unify disparate signals into a single source of truth.</p>
+</div>
+<!-- Step 2 -->
+<div class="glass-card p-8 rounded-2xl border-t-2 border-t-secondary/50">
+<div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary" data-icon="query_stats">query_stats</span>
+</div>
+<h3 class="font-h3 text-h3 mb-4">Analyze</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Our AI engine correlates thousands of events to identify the root cause, filtering out the noise that slows teams down.</p>
+</div>
+<!-- Step 3 -->
+<div class="glass-card p-8 rounded-2xl border-t-2 border-t-secondary/50">
+<div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary" data-icon="auto_fix_high">auto_fix_high</span>
+</div>
+<h3 class="font-h3 text-h3 mb-4">Resolve</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Trigger automated runbooks or collaborate in real-time within our high-density command console.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Section -->
+<section class="py-24 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col lg:flex-row gap-16 items-center">
+<div class="lg:w-1/2 space-y-12">
+<div>
+<h2 class="font-h2 text-h2 mb-6">Built for High-Stakes Reliability</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Precision engineering for the world's most demanding environments.</p>
+</div>
+<div class="space-y-8">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-secondary mt-1" data-icon="security" data-weight="fill">security</span>
+<div>
+<h4 class="font-h3 text-lg mb-2">Zero-Trust Compliance</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">SOC2 Type II and HIPAA compliant from day one, with end-to-end encryption for all incident logs.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-secondary mt-1" data-icon="speed" data-weight="fill">speed</span>
+<div>
+<h4 class="font-h3 text-lg mb-2">Sub-Second Latency</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Real-time updates delivered via global edge network. Your team stays in sync, even during global outages.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-secondary mt-1" data-icon="terminal" data-weight="fill">terminal</span>
+<div>
+<h4 class="font-h3 text-lg mb-2">Advanced CLI Tooling</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Manage incidents without leaving your terminal. Our Go-based CLI is designed for developer speed.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:w-1/2 grid grid-cols-2 gap-4">
+<div class="space-y-4 mt-8">
+<div class="glass-card aspect-square rounded-2xl flex flex-col items-center justify-center p-6 text-center border-b-secondary/20">
+<span class="material-symbols-outlined text-secondary text-4xl mb-4" data-icon="groups">groups</span>
+<span class="font-h3 text-xl">Collaborate</span>
+</div>
+<div class="glass-card aspect-square rounded-2xl flex flex-col items-center justify-center p-6 text-center border-b-secondary/20">
+<span class="material-symbols-outlined text-secondary text-4xl mb-4" data-icon="history">history</span>
+<span class="font-h3 text-xl">Audit</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="glass-card aspect-square rounded-2xl flex flex-col items-center justify-center p-6 text-center border-b-secondary/20">
+<span class="material-symbols-outlined text-secondary text-4xl mb-4" data-icon="settings_suggest">settings_suggest</span>
+<span class="font-h3 text-xl">Automate</span>
+</div>
+<div class="glass-card aspect-square rounded-2xl flex flex-col items-center justify-center p-6 text-center border-b-secondary/20">
+<span class="material-symbols-outlined text-secondary text-4xl mb-4" data-icon="monitoring">monitoring</span>
+<span class="font-h3 text-xl">Monitor</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Our Team Section -->
+<section class="py-24 px-6 bg-surface-container">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-h2 text-h2 mb-4">Engineered by Experts</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">Our team comes from the frontlines of SRE and Infrastructure engineering at top-tier tech firms.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Team Member 1 -->
+<div class="group">
+<div class="relative mb-4 overflow-hidden rounded-2xl glass-card aspect-[4/5]">
+<img class="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100" data-alt="A professional portrait of a man with a focused expression, wearing a minimalist black turtleneck. He is set against a dark, moody background with subtle teal rim lighting that highlights his profile. The photographic style is high-contrast, corporate modern, conveying authority and technical expertise. The lighting mimics a dark-mode UI aesthetic with cool, sharp tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1UUgUn8aCkUdJqK8XZ5zDdTTF7VvBeR_4zIUhVHeBxMS604P9PLqm0K2JK9JWouFRlcjWLmH1zeZRhxMnZe5YJHKkeXthbg665c3F4RXobmhnY_Xv5A3J_uUAdRqo-0v96HsL-_Uwb9-PFKDtBjvCHHgmRwFTzjVl9hP_onXo6THf83HWsH_n0g-L5OWO-0zgC7YeahvxafjKjUoaQbPAtEb1GVfvmP4c84QotKDXhfzNFRb9stwG3Nu_ZwH5vLk9pKCUQQX0Auj5"/>
+</div>
+<h4 class="font-h3 text-lg">Dr. Alex Rivers</h4>
+<p class="font-body-sm text-secondary">Chief Architect</p>
+</div>
+<!-- Team Member 2 -->
+<div class="group">
+<div class="relative mb-4 overflow-hidden rounded-2xl glass-card aspect-[4/5]">
+<img class="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100" data-alt="A professional portrait of a woman with a confident smile, set in a sleek, glass-walled office environment at night. The city lights outside create a beautiful bokeh effect in shades of deep blue and teal. She is illuminated by soft, warm lighting from the side, creating a sophisticated professional look. The overall aesthetic is high-tech, modern, and trustworthy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBBkRWtAXwhJRHEu6W55HtQSqOX4SX7n6R6vwkxFpJkMh85G-jEE9AZh8CEqOU4WQ6o6KyEBnrpFcbFJBJY8OwdnREK_SskU5DvB5FNPggVgmkvv432RbkZR5tgRDrp9fvhNp5H5f6o_RTqLOgYUsCLAaGsckpHG4tIgEB4KpRayxzwAS7zyICLIRRMTAtLpeaNI0yk8VohIoOBLMDpAAfnJipGir0XopSuGyineg4xIXlUv6S6q8IyikFoWS8lb9K0Y-oHQxUx_qh"/>
+</div>
+<h4 class="font-h3 text-lg">Sarah Chen</h4>
+<p class="font-body-sm text-secondary">Head of Security</p>
+</div>
+<!-- Team Member 3 -->
+<div class="group">
+<div class="relative mb-4 overflow-hidden rounded-2xl glass-card aspect-[4/5]">
+<img class="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100" data-alt="A portrait of a male infrastructure engineer wearing a modern headset, looking at off-screen monitors. The room is dimly lit, with the blue and teal glow of server rack lights reflected in his glasses. The mood is one of intense focus and technical readiness. The composition is cinematic, using a shallow depth of field to emphasize the subject against the high-tech background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnA2P18NTsf2aaTafzIkWAjpiZJ0cBxLt43Oe5QfOq3NjiQKo0cefA-bEXpRw9lJvI2dXFHxzk5PCqjiCs4ngO-yj68tzP7sUMF1x3-WwmYaH140Q89-zviVlYF6FU39IlE9eFil0mid8G0x5U3HjHmtowGfYe4QKpUwBH0PNXY_dxarLxfYTlG3dRov-WKqtN2ksmsKhdBAT0W4E5F_2Q5ZowqYTVaYgaiuPi5cfRmT6uSi6n89K326S9cOgWMyR_PK3GHczJe_yi"/>
+</div>
+<h4 class="font-h3 text-lg">Marcus Thorne</h4>
+<p class="font-body-sm text-secondary">VP Operations</p>
+</div>
+<!-- Team Member 4 -->
+<div class="group">
+<div class="relative mb-4 overflow-hidden rounded-2xl glass-card aspect-[4/5]">
+<img class="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100" data-alt="A close-up professional portrait of a woman with a sharp, intelligent gaze. She is positioned in a futuristic setting with glowing geometric lines in the background that echo the primary brand colors. The lighting is crisp and cool, emphasizing clarity and precision. The visual style is avant-garde corporate, merging human intelligence with advanced technological themes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuih2fT4Ez6IcPw7sSlH3nQC0kfuZ-nrwe2eP6rq2zZTXhqOKEB1WCSp1O3wIPRYAZoQ_5q3zbHfLry9Acc-9IUKJPUdizgWs-9MfWwFD-bixz62diHvbVYT27Un1-uS2ppUasN_ss49vDXpe3Tljp8qcSmfkEr2t0dU6KrD5JI1xNkXQQ_rZeF241oZfvZePX4RnqOdiR16CqmTXd4Q7TKKac9fZtadhIHyMj9j2unG5dHMSnF2ruEdPZNg_AbOi6UfyZ8Ldsjyjd"/>
+</div>
+<h4 class="font-h3 text-lg">Elena Vance</h4>
+<p class="font-body-sm text-secondary">Product Lead</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Hackathon Goal Section -->
+<section class="py-24 px-6 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="absolute top-0 right-0 w-96 h-96 bg-secondary blur-[120px]"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-secondary blur-[120px]"></div>
+</div>
+<div class="max-w-4xl mx-auto glass-card p-12 rounded-3xl border border-secondary/30 relative z-10">
+<div class="flex flex-col md:flex-row gap-12 items-center">
+<div class="flex-1">
+<span class="font-label-caps text-label-caps text-secondary tracking-[0.2em] mb-4 block">DEMO ONLY</span>
+<h2 class="font-h2 text-h2 mb-6">Hackathon Goal</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8">
+                        IncidentX is our entry for the 2024 Reliability Engineering Hackathon. Our goal is to demonstrate that complex system visualization doesn't have to be a mess of wires. By combining real-time topology with predictive analytics, we're aiming to reduce Mean Time to Recovery (MTTR) by 60%.
+                    </p>
+<div class="flex items-center gap-6">
+<div class="text-center">
+<p class="text-3xl font-h1 text-secondary mb-1">48</p>
+<p class="font-label-caps text-[10px] text-on-surface-variant">HOURS OF CODE</p>
+</div>
+<div class="h-10 w-px bg-white/10"></div>
+<div class="text-center">
+<p class="text-3xl font-h1 text-secondary mb-1">12</p>
+<p class="font-label-caps text-[10px] text-on-surface-variant">INTEGRATIONS</p>
+</div>
+<div class="h-10 w-px bg-white/10"></div>
+<div class="text-center">
+<p class="text-3xl font-h1 text-secondary mb-1">0</p>
+<p class="font-label-caps text-[10px] text-on-surface-variant">DOWNTIME</p>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/3">
+<div class="aspect-square glass-card rounded-full flex items-center justify-center p-8 border-2 border-dashed border-secondary/20">
+<span class="material-symbols-outlined text-6xl text-secondary animate-pulse" data-icon="trophy">trophy</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-slate-950 pt-20 pb-12">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8 border-t border-white/5 py-12">
+<div class="flex flex-col items-center md:items-start gap-4">
+<span class="text-teal-400 font-bold text-2xl tracking-tighter">IncidentX</span>
+<p class="font-['Space_Grotesk'] text-xs text-slate-500">© 2024 IncidentX. Built for high-stakes reliability.</p>
+</div>
+<div class="flex gap-8">
+<a class="font-['Space_Grotesk'] text-xs text-slate-500 hover:text-teal-300 transition-colors" href="#">Privacy</a>
+<a class="font-['Space_Grotesk'] text-xs text-slate-500 hover:text-teal-300 transition-colors" href="#">Terms</a>
+<a class="font-['Space_Grotesk'] text-xs text-slate-500 hover:text-teal-300 transition-colors" href="#">Security</a>
+<a class="font-['Space_Grotesk'] text-xs text-slate-500 hover:text-teal-300 transition-colors" href="#">Status</a>
+</div>
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-full glass-card flex items-center justify-center hover:text-teal-300 cursor-pointer transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="alternate_email">alternate_email</span>
+</div>
+<div class="w-8 h-8 rounded-full glass-card flex items-center justify-center hover:text-teal-300 cursor-pointer transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="public">public</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

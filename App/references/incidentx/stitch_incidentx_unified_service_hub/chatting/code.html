@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-panel-heavy {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #45464d;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#c6c6cd",
+                        "tertiary-fixed": "#c4e7ff",
+                        "inverse-primary": "#565e74",
+                        "error": "#ffb4ab",
+                        "surface-container-lowest": "#010f1f",
+                        "surface-container-highest": "#273647",
+                        "on-tertiary-fixed": "#001e2c",
+                        "secondary-fixed-dim": "#3cddc7",
+                        "secondary-container": "#03c6b2",
+                        "tertiary-fixed-dim": "#7bd0ff",
+                        "on-secondary-fixed-variant": "#005047",
+                        "tertiary-container": "#001a27",
+                        "outline": "#909097",
+                        "inverse-on-surface": "#233143",
+                        "on-background": "#d4e4fa",
+                        "primary-fixed": "#dae2fd",
+                        "surface-tint": "#bec6e0",
+                        "primary-container": "#0f172a",
+                        "on-primary-fixed": "#131b2e",
+                        "surface-container-low": "#0d1c2d",
+                        "on-tertiary": "#00354a",
+                        "primary": "#bec6e0",
+                        "tertiary": "#7bd0ff",
+                        "inverse-surface": "#d4e4fa",
+                        "primary-fixed-dim": "#bec6e0",
+                        "surface": "#051424",
+                        "secondary": "#44e2cd",
+                        "surface-variant": "#273647",
+                        "on-secondary-fixed": "#00201c",
+                        "on-secondary": "#003731",
+                        "on-primary-container": "#798098",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-container-high": "#1c2b3c",
+                        "background": "#051424",
+                        "on-primary": "#283044",
+                        "on-surface": "#d4e4fa",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "surface-bright": "#2c3a4c",
+                        "on-tertiary-container": "#008abb",
+                        "surface-container": "#122131",
+                        "on-tertiary-fixed-variant": "#004c69",
+                        "outline-variant": "#45464d",
+                        "surface-dim": "#051424",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed": "#62fae3",
+                        "on-secondary-container": "#004d44"
+                    },
+                    "fontFamily": {
+                        "h2": ["Space Grotesk"],
+                        "body-md": ["Inter"],
+                        "mono-code": ["Space Grotesk"],
+                        "body-sm": ["Inter"],
+                        "h1": ["Space Grotesk"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Space Grotesk"],
+                        "label-caps": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-white/10 shadow-[0_0_20px_rgba(20,184,166,0.1)] font-['Space_Grotesk'] antialiased">
+<div class="flex items-center gap-4">
+<span class="text-2xl font-bold tracking-tighter text-teal-400">IncidentX</span>
+<div class="h-6 w-px bg-white/10 ml-2"></div>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Developers</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Solutions</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">Pricing</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:text-white transition-all scale-95 active:scale-90 duration-200">Sign In</button>
+<button class="bg-secondary-container text-on-secondary px-6 py-2 rounded-lg font-bold hover:shadow-[0_0_15px_rgba(68,226,205,0.4)] transition-all scale-95 active:scale-90 duration-200">Get Started</button>
+</div>
+</header>
+<!-- Sidebar (SideNavBar) -->
+<aside class="hidden lg:flex flex-col fixed left-0 top-0 h-full w-64 z-40 bg-slate-950/50 backdrop-blur-2xl border-r border-white/10 font-['Space_Grotesk'] text-sm font-medium pt-24 pb-6">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a software engineer with glasses, looking directly at the camera with a friendly expression. The background is a dimly lit office with cool blue and teal lighting, reflecting the high-tech command center aesthetic of IncidentX. High-quality corporate portrait photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBANQTleXbe2HTF0RZ4gFYXZhCAx_VpsqPdxGGbNJE6y5fAEWBUlopuRwJm9kYBMEWiJ3tPYshhfLvwZus9Qb7UoIKmiLP4y-kMZpyj1Kb1i_LGLBg8JKUikm_kHuJ2OjO_humElEWyPEiCnO6CojofzYZcaYyslVtipNU0I-UvjSF9XRp4iemRqOWMy1FgA277PezuLbNAwOhpUzyH2PDLV_l7mMXvxGx3IgGGJDVBKpmRzFKJSSci_yS8wrWBJ8yzSQw2hlBR3CPE"/>
+</div>
+<div>
+<p class="text-white font-bold">IncidentX Console</p>
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(68,226,205,0.8)]"></span>
+<span class="text-[10px] text-secondary">System Operational</span>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="text-slate-400 hover:bg-white/5 px-4 py-3 flex items-center gap-3 cursor-pointer transition-transform">
+<span class="material-symbols-outlined text-xl">dashboard</span> Dashboard
+            </div>
+<div class="text-slate-400 hover:bg-white/5 px-4 py-3 flex items-center gap-3 cursor-pointer transition-transform">
+<span class="material-symbols-outlined text-xl">hub</span> Services
+            </div>
+<div class="bg-teal-500/10 text-teal-400 border-l-4 border-teal-400 px-4 py-3 flex items-center gap-3 cursor-pointer transition-transform">
+<span class="material-symbols-outlined text-xl">emergency_share</span> Incidents
+            </div>
+<div class="text-slate-400 hover:bg-white/5 px-4 py-3 flex items-center gap-3 cursor-pointer transition-transform">
+<span class="material-symbols-outlined text-xl">group</span> Team
+            </div>
+<div class="text-slate-400 hover:bg-white/5 px-4 py-3 flex items-center gap-3 cursor-pointer transition-transform">
+<span class="material-symbols-outlined text-xl">settings</span> Settings
+            </div>
+</nav>
+<div class="px-4 mt-auto space-y-2">
+<button class="w-full bg-error-container/20 text-error border border-error/30 py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-error-container/40 transition-all font-bold">
+<span class="material-symbols-outlined text-sm">report</span> Report Incident
+            </button>
+<div class="pt-4 border-t border-white/5 space-y-1">
+<div class="text-slate-500 hover:text-teal-300 px-2 py-2 flex items-center gap-3 text-xs cursor-pointer transition-all">
+<span class="material-symbols-outlined text-sm">menu_book</span> Documentation
+                </div>
+<div class="text-slate-500 hover:text-teal-300 px-2 py-2 flex items-center gap-3 text-xs cursor-pointer transition-all">
+<span class="material-symbols-outlined text-sm">support_agent</span> Support
+                </div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-20 h-screen flex flex-col">
+<div class="flex-1 flex overflow-hidden">
+<!-- Chat Interface Area -->
+<div class="flex-1 flex flex-col relative">
+<!-- Chat Header -->
+<div class="px-8 py-4 glass-panel border-x-0 border-t-0 flex justify-between items-center z-10">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<h2 class="font-h3 text-h3 text-white">Incident #842 - DB Latency Spikes</h2>
+<span class="px-2 py-0.5 rounded bg-error-container/20 text-error text-[10px] font-bold tracking-widest uppercase border border-error/30">CRITICAL</span>
+</div>
+<p class="text-on-surface-variant text-sm mt-1">Primary contact: Alex Rivera (Customer)</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 rounded-lg glass-panel hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-slate-400">phone</span>
+</button>
+<button class="p-2 rounded-lg glass-panel hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-slate-400">videocam</span>
+</button>
+<button class="p-2 rounded-lg glass-panel hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Messages Stream -->
+<div class="flex-1 overflow-y-auto px-8 py-10 space-y-8">
+<!-- System Message (Monospace) -->
+<div class="flex justify-center">
+<div class="bg-surface-container-high px-4 py-2 rounded-full border border-white/5 flex items-center gap-3">
+<span class="material-symbols-outlined text-teal-400 text-sm">terminal</span>
+<span class="font-mono-code text-teal-400 text-xs uppercase tracking-widest">[SYSTEM LOG] 08:42:15 - Latency threshhold exceeded on US-EAST-1</span>
+</div>
+</div>
+<!-- Customer Message -->
+<div class="flex gap-4 max-w-3xl">
+<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 border border-white/10 shadow-lg">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male customer, mid-30s, wearing a casual dark sweater. He has a concerned expression. The lighting is natural but crisp, set against a blurred office environment with soft teal tones to match the overall dashboard color scheme. Realistic cinematic photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLFyL7NIBMmf2AY_UXF_jVw-YH5LZadiuDHevg5hpxVWE1MWrvRpfeob0QOeMtGuLu50MPjGL_FFzcgZX-IH_u9sDShW-lNuQtic1hjCUQRTsGeGeE0pR4fUmnnx5ZK6fsNHb4prOcT_dgLx8h6LQCDCQnyD6EUIUaLJO3F8L05Nt4uT4OCAO8X_MHzdsShFj4clmI2CiRv6nogyYgdsdbgwBNCIRQj5di1t3plVqKsX-50cOmU4eeVVEoVFR7nNSRfWZURWIYqY4U"/>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="font-bold text-white text-sm">Alex Rivera</span>
+<span class="text-[10px] text-slate-500">08:43 AM</span>
+</div>
+<div class="glass-panel p-4 rounded-xl rounded-tl-none border-l-2 border-l-primary">
+<p class="text-on-surface text-body-md">We're seeing major timeouts on our payment processing gateway. This is impacting roughly 40% of our checkout sessions right now. Any updates on the fix?</p>
+</div>
+</div>
+</div>
+<!-- Bot Message -->
+<div class="flex gap-4 max-w-3xl ml-auto flex-row-reverse">
+<div class="w-10 h-10 rounded-lg bg-teal-500/20 border border-teal-500/30 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-teal-400" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="space-y-1 text-right">
+<div class="flex items-center gap-2 justify-end">
+<span class="text-[10px] text-slate-500">08:43 AM</span>
+<span class="font-bold text-teal-400 text-sm">IncidentX AI</span>
+</div>
+<div class="glass-panel-heavy p-4 rounded-xl rounded-tr-none border-r-2 border-r-teal-500 bg-teal-500/5">
+<p class="text-on-surface text-body-md italic">Analyzing US-EAST-1 telemetry... I've detected a routing anomaly in the VPC peering link. Scaling operations have been initiated for the Redis cluster. ETA for mitigation: 4 minutes.</p>
+</div>
+</div>
+</div>
+<!-- Employee 1 Message -->
+<div class="flex gap-4 max-w-3xl ml-auto flex-row-reverse">
+<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 border border-secondary/30">
+<img class="w-full h-full object-cover" data-alt="A professional female DevOps engineer with a sharp look and confident posture. She is wearing a dark headset. The lighting is stylized with dramatic teal rim lights, consistent with a high-stakes command center environment. Highly detailed digital portrait photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_SSbUIQNjFPnoqdCgHcIhhCvLuBWh4OiaXgnb5D5Dx9XqxG64x8j8GCaFb56xTG5-Ugtf-4tMMY1RGWwe1mkb2BRM2sT8P-oHhcZ3hvTP8KCnoLeidXQFAuYjqqIynQsR6C-EYyXLI8uqGSnIkVWOFl10wjEBay-WqhXeE-nd-XG2GkRzr3snU0V7WOy6s8Y9UiM8fcq2BGMYILv_JkM9Pv61KmAN5uU5z73p166ClhVQqfKls_L62oE5-l058Q4pHQXNBr863gos"/>
+</div>
+<div class="space-y-1 text-right">
+<div class="flex items-center gap-2 justify-end">
+<span class="text-[10px] text-slate-500">08:44 AM</span>
+<span class="font-bold text-white text-sm">Sarah Chen (Staff Engineer)</span>
+</div>
+<div class="glass-panel p-4 rounded-xl rounded-tr-none border-r-2 border-r-secondary">
+<p class="text-on-surface text-body-md">Thanks AI. Alex, I'm taking lead on this. I've just manually rerouted traffic to the failover region. You should see recovery in the next 60 seconds. Checking the logs now.</p>
+</div>
+</div>
+</div>
+<!-- Employee 2 Message -->
+<div class="flex gap-4 max-w-3xl ml-auto flex-row-reverse">
+<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 border border-secondary/30">
+<img class="w-full h-full object-cover" data-alt="A male reliability engineer in his late 20s, focused and looking at multiple screens off-camera. His face is lit by the glow of monitors with a predominantly cool teal and navy blue light cast. High-end editorial style portrait of a tech professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzQqHuOlxGy9YMccrsn2Wa6XA1GgSXv4dhpN9j1v87jaTpkWWSaaB4EQvp3JKLmJ6nOT4NjbuG0jMC6zU4acMv4jP7r-dPaKKEowFJdSGDGbfRWCWfNlRENIgnMdoPxcCMPis056U4ZyZFmZwflvTNDbCl2Y32du6IxveTJg_h2Il39kPWx-sSesgBYDmP2yskWnXSoWL7X7_wghB1fidSToyhB6pCAmvcFS50ncduWV_xWhwgRPHxfRjTQkp3n5rlDewq-M-BeGpG"/>
+</div>
+<div class="space-y-1 text-right">
+<div class="flex items-center gap-2 justify-end">
+<span class="text-[10px] text-slate-500">08:45 AM</span>
+<span class="font-bold text-white text-sm">Marcus Thorne (SRE)</span>
+</div>
+<div class="glass-panel p-4 rounded-xl rounded-tr-none border-r-2 border-r-secondary">
+<p class="text-on-surface text-body-md">Sarah, I'm verifying the database connection pool. It looks like the scale-up reached its max. I'm bumping the limit to handle the backlog while the reroute stabilizes.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat Input Area -->
+<div class="p-6">
+<div class="max-w-5xl mx-auto glass-panel-heavy rounded-2xl p-4 flex items-end gap-4 shadow-2xl">
+<div class="flex gap-2">
+<button class="p-2 rounded-lg text-slate-400 hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<button class="p-2 rounded-lg text-slate-400 hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined">image</span>
+</button>
+<button class="p-2 rounded-lg text-slate-400 hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+</div>
+<div class="flex-1">
+<textarea class="w-full bg-transparent border-0 border-b border-white/10 focus:ring-0 focus:border-teal-400 text-white placeholder-slate-500 py-2 resize-none transition-all" placeholder="Reply to incident..." rows="1"></textarea>
+</div>
+<button class="bg-secondary-container text-on-secondary p-3 rounded-xl flex items-center justify-center hover:shadow-[0_0_15px_rgba(68,226,205,0.4)] transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Participant Sidebar -->
+<div class="w-80 glass-panel border-y-0 border-r-0 hidden xl:flex flex-col">
+<div class="p-6 border-b border-white/5">
+<h3 class="font-h3 text-h3 text-white text-lg">Participants</h3>
+<p class="text-slate-500 text-xs mt-1">4 Active in Channel</p>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-6">
+<!-- Customer Group -->
+<div class="space-y-3">
+<p class="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase px-2">Customer</p>
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-8 h-8 rounded-full border border-white/10" data-alt="A portrait of a male customer, mid-30s, wearing a casual dark sweater. He has a concerned expression. The lighting is natural but crisp, set against a blurred office environment with soft teal tones to match the overall dashboard color scheme. Realistic cinematic photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWpD1qZwefeAzuGrYiYhpdxiSE0AARQTU0RTs_bvI6I0kzahRyRgKJj1W8luQZhF4ly868vuOg7c38vrZFZEH92COSCB-2KimG8x-IXllqufK8GGe9XVZoEJxZSThr97UEINOp_6JHT4ZHDUMmOx_vdZSRnFjJ9qekeldsSl4US5Mh72yKlkitYhKUMvP41HmlAUWKYIlPH0efl1plhPppd6-Xbk-7G6Hhg2JnXRPI2UdSIuRzeuKopwS00jF6SqVI5zodLpdIt1ht"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-secondary border-2 border-slate-900 rounded-full"></span>
+</div>
+<div>
+<p class="text-white text-sm font-medium">Alex Rivera</p>
+<p class="text-slate-500 text-[10px]">VP of Engineering</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Incident Team Group -->
+<div class="space-y-3">
+<p class="text-[10px] font-bold text-teal-400 tracking-[0.2em] uppercase px-2">Incident Team</p>
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-8 h-8 rounded-full border border-secondary/30" data-alt="A professional female DevOps engineer with a sharp look and confident posture. She is wearing a dark headset. The lighting is stylized with dramatic teal rim lights, consistent with a high-stakes command center environment. Highly detailed digital portrait photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAye0Cj2ToU4lftww9qdbIaRoVVXTvDSeKsVTzkaiFUYNC3qLcb4kX8LXpQ24J0UXzGcVp-XJjOG4cNkM2kLPnmUW9D0Pha9zMiq1rm5Qomeu77sKDyL39Y_R14qChBUwMWojpcZt0GGMh2xGE0sWSgJ62CKOy-4eykazAZYYMHfEXXB_-svvdLNMl5-ToYBDxkcyEZMuC6CjIhW5GEXeIhKIEgEPH-JuGHpCw4R1xIGloBzLsusvCt-IiEDQFEKMv4EV1rbFMViYAM"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-secondary border-2 border-slate-900 rounded-full"></span>
+</div>
+<div>
+<p class="text-white text-sm font-medium">Sarah Chen</p>
+<p class="text-teal-400 text-[10px]">Staff Engineer</p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-8 h-8 rounded-full border border-secondary/30" data-alt="A male reliability engineer in his late 20s, focused and looking at multiple screens off-camera. His face is lit by the glow of monitors with a predominantly cool teal and navy blue light cast. High-end editorial style portrait of a tech professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrlV5-o4MFN2-Ay91YdQWtHGLYoOG_gwgvW_QL5-eObxhlHzTRqXmEZGpw13U4BTVo43G40Y8REALjH2Yf3c9_OQAiTTTEOfNiWJrL0WdlNnMFzbm6UPNgX8NQQy0zufIwi0RHlhEOKkJFhdJufhF165W_MDuJvt6eJ7eIUtyrUlPc2dBZuify7_cn_jSQYCT_8LYJjTnhngSF0LgTpdxjv3fwZWtK__Zl-gKCSfruEq5yR_q9rQOMahRRPQCEjlOJZJvQNNodXYZZ"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-secondary border-2 border-slate-900 rounded-full"></span>
+</div>
+<div>
+<p class="text-white text-sm font-medium">Marcus Thorne</p>
+<p class="text-teal-400 text-[10px]">SRE</p>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Support Group -->
+<div class="space-y-3">
+<p class="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase px-2">Automations</p>
+<div class="flex items-center justify-between p-2 rounded-lg bg-teal-500/5 border border-teal-500/10 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-teal-500/20 flex items-center justify-center border border-teal-500/30">
+<span class="material-symbols-outlined text-teal-400 text-sm">smart_toy</span>
+</div>
+<div>
+<p class="text-white text-sm font-medium">IncidentX Bot</p>
+<p class="text-teal-400 text-[10px]">Active Analysis</p>
+</div>
+</div>
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+</div>
+</div>
+</div>
+<div class="p-6 mt-auto">
+<button class="w-full glass-panel-heavy p-3 rounded-xl flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-all text-xs font-bold">
+<span class="material-symbols-outlined text-sm">person_add</span> Invite Teammate
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="lg:ml-64 bg-slate-950 border-t border-white/5 py-6 fixed bottom-0 left-0 right-0 z-30">
+<div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center font-['Space_Grotesk'] text-xs text-slate-500">
+<div class="flex items-center gap-4 mb-4 md:mb-0">
+<span class="text-teal-400 font-bold">IncidentX</span>
+<span>© 2024 Built for high-stakes reliability.</span>
+</div>
+<div class="flex gap-6">
+<a class="text-slate-500 hover:text-teal-300 transition-colors" href="#">Privacy</a>
+<a class="text-slate-500 hover:text-teal-300 transition-colors" href="#">Terms</a>
+<a class="text-slate-500 hover:text-teal-300 transition-colors" href="#">Security</a>
+<a class="text-slate-500 hover:text-teal-300 transition-colors flex items-center gap-1" href="#">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Status
+                </a>
+</div>
+</div>
+</footer>
+</body></html>

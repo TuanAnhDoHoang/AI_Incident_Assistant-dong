@@ -1,0 +1,472 @@
+/* ===== Admin Bot Chat Page Styles ===== */
+
+.page {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.main {
+  margin-left: 0;
+  padding-top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  .main {
+    margin-left: 256px;
+  }
+}
+
+.chatContainer {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── Chat Area ── */
+.chatArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Header */
+.chatHeader {
+  padding: 16px 32px;
+  z-index: 10;
+  border-bottom: 1px solid rgba(20, 184, 166, 0.15);
+  background: rgba(20, 184, 166, 0.03);
+  backdrop-filter: blur(20px);
+}
+
+.chatHeaderInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.botIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(20, 184, 166, 0.12);
+  border: 1px solid rgba(20, 184, 166, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+}
+
+.chatSubtitle {
+  color: #64748b;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.headerBadges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(20, 184, 166, 0.1);
+  border: 1px solid rgba(20, 184, 166, 0.3);
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #2dd4bf;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2dd4bf;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.roleBadge {
+  padding: 4px 10px;
+  background: rgba(68, 226, 205, 0.08);
+  border: 1px solid rgba(68, 226, 205, 0.15);
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #44e2cd;
+}
+
+/* Messages */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(20, 184, 166, 0.15) transparent;
+}
+
+.messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background: rgba(20, 184, 166, 0.15);
+  border-radius: 4px;
+}
+
+/* Message Row */
+.msgRow {
+  display: flex;
+  gap: 12px;
+  max-width: 720px;
+  animation: msgFadeIn 0.3s ease-out;
+}
+
+@keyframes msgFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.msgRowLeft {
+  /* bot messages */
+}
+
+.msgRowRight {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+.msgAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.msgAvatarBot {
+  background: rgba(20, 184, 166, 0.15);
+  border: 1px solid rgba(20, 184, 166, 0.25);
+}
+
+.msgAvatarAdmin {
+  background: var(--color-surface-container-highest);
+  border: 1px solid rgba(68, 226, 205, 0.3);
+  color: #44e2cd;
+}
+
+.msgBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.msgBodyRight {
+  text-align: right;
+}
+
+.msgMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.msgMetaRight {
+  justify-content: flex-end;
+}
+
+.msgSender {
+  font-weight: 600;
+  font-size: 13px;
+  color: white;
+}
+
+.msgSenderBot {
+  color: #2dd4bf;
+}
+
+.msgTime {
+  font-size: 10px;
+  color: #475569;
+}
+
+.reportTag {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.msgBubble {
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 22px;
+  backdrop-filter: blur(20px);
+}
+
+.msgBubbleBot {
+  background: rgba(20, 184, 166, 0.04);
+  border: 1px solid rgba(20, 184, 166, 0.12);
+  border-radius: 4px 12px 12px 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.msgBubbleReport {
+  background: rgba(245, 158, 11, 0.04);
+  border: 1px solid rgba(245, 158, 11, 0.12);
+  border-left: 3px solid rgba(245, 158, 11, 0.4);
+  border-radius: 4px 12px 12px 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.msgBubbleAdmin {
+  background: rgba(68, 226, 205, 0.06);
+  border: 1px solid rgba(68, 226, 205, 0.15);
+  border-radius: 12px 4px 12px 12px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Input Area */
+.chatInputArea {
+  padding: 16px 32px 24px;
+}
+
+.chatInputWrap {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quickActions {
+  display: flex;
+  gap: 6px;
+}
+
+.quickBtn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Space Grotesk', monospace;
+  color: #2dd4bf;
+  background: rgba(20, 184, 166, 0.06);
+  border: 1px solid rgba(20, 184, 166, 0.15);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.quickBtn:hover {
+  background: rgba(20, 184, 166, 0.15);
+  border-color: rgba(20, 184, 166, 0.3);
+}
+
+.inputRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  border-radius: 14px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(20, 184, 166, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.chatTextarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 4px 0;
+  resize: none;
+  font-size: 14px;
+  outline: none;
+}
+
+.chatTextarea::placeholder {
+  color: #475569;
+}
+
+.sendBtn {
+  background: #03c6b2;
+  color: #003731;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.sendBtn:hover {
+  box-shadow: 0 0 15px rgba(68, 226, 205, 0.4);
+}
+
+/* ── Info Sidebar ── */
+.infoSidebar {
+  width: 300px;
+  display: none;
+  flex-direction: column;
+  border-left: 1px solid rgba(20, 184, 166, 0.1);
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(20px);
+  overflow-y: auto;
+}
+
+@media (min-width: 1280px) {
+  .infoSidebar {
+    display: flex;
+  }
+}
+
+.infoHeader {
+  padding: 20px;
+  border-bottom: 1px solid rgba(20, 184, 166, 0.08);
+}
+
+.infoTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.infoSub {
+  color: #475569;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.infoSection {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.infoLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #2dd4bf;
+  margin-bottom: 10px;
+}
+
+.statusCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.capList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.capItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 4px 0;
+}
+
+.cmdList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cmdBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'Space Grotesk', monospace;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cmdBtn:hover {
+  color: #2dd4bf;
+  border-color: rgba(20, 184, 166, 0.2);
+  background: rgba(20, 184, 166, 0.05);
+}
+
+/* Back button */
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-on-surface-variant);
+  font-size: 14px;
+  padding: 12px 32px 0;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.backBtn:hover {
+  color: #44e2cd;
+}

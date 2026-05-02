@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IncidentX Core - Manage Personnel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#bec6e0",
+                    "on-secondary": "#003731",
+                    "inverse-primary": "#565e74",
+                    "error-container": "#93000a",
+                    "background": "#051424",
+                    "primary": "#bec6e0",
+                    "on-primary": "#283044",
+                    "tertiary": "#7bd0ff",
+                    "surface-variant": "#273647",
+                    "on-tertiary-fixed-variant": "#004c69",
+                    "surface": "#051424",
+                    "tertiary-fixed": "#c4e7ff",
+                    "secondary": "#44e2cd",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "tertiary-fixed-dim": "#7bd0ff",
+                    "surface-tint": "#bec6e0",
+                    "outline": "#909097",
+                    "surface-container-highest": "#273647",
+                    "on-primary-fixed": "#131b2e",
+                    "on-background": "#d4e4fa",
+                    "error": "#ffb4ab",
+                    "on-secondary-container": "#004d44",
+                    "on-error-container": "#ffdad6",
+                    "primary-container": "#0f172a",
+                    "on-primary-container": "#798098",
+                    "surface-container": "#122131",
+                    "secondary-fixed-dim": "#3cddc7",
+                    "on-error": "#690005",
+                    "outline-variant": "#45464d",
+                    "on-tertiary-fixed": "#001e2c",
+                    "on-surface": "#d4e4fa",
+                    "on-tertiary-container": "#008abb",
+                    "on-surface-variant": "#c6c6cd",
+                    "surface-dim": "#051424",
+                    "on-secondary-fixed": "#00201c",
+                    "surface-container-lowest": "#010f1f",
+                    "secondary-container": "#03c6b2",
+                    "surface-container-low": "#0d1c2d",
+                    "secondary-fixed": "#62fae3",
+                    "on-tertiary": "#00354a",
+                    "inverse-surface": "#d4e4fa",
+                    "surface-container-high": "#1c2b3c",
+                    "tertiary-container": "#001a27",
+                    "surface-bright": "#2c3a4c",
+                    "primary-fixed": "#dae2fd",
+                    "inverse-on-surface": "#233143",
+                    "on-secondary-fixed-variant": "#005047"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "12px",
+                    "container-padding": "24px",
+                    "base": "8px",
+                    "stack-lg": "24px",
+                    "gutter": "16px",
+                    "stack-sm": "4px"
+            },
+            "fontFamily": {
+                    "h1": ["Space Grotesk"],
+                    "label-caps": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "mono-code": ["Space Grotesk"],
+                    "h3": ["Space Grotesk"],
+                    "h2": ["Space Grotesk"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "h1": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "mono-code": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "h2": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(68, 226, 205, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-secondary/30">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-slate-950/80 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] font-['Space_Grotesk'] antialiased">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold tracking-tighter text-teal-400">IncidentX Core</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex items-center bg-white/5 border border-white/10 px-4 py-1.5 rounded-full group focus-within:border-teal-400/50 transition-all">
+<span class="material-symbols-outlined text-slate-400 text-sm mr-2">search</span>
+<input class="bg-transparent border-none text-body-sm focus:ring-0 text-white placeholder-slate-500 w-48" placeholder="Global search..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:bg-white/5 hover:text-teal-300 transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-400 hover:bg-white/5 hover:text-teal-300 transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-teal-400/30">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a professional system administrator in a dark, tech-oriented environment. The lighting is low-key with cool teal highlights reflecting off their glasses. The overall mood is focused and authoritative, consistent with a high-stakes incident command center aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9TlaUtE5qqI1nUc-nLBef_UObIvet9NT4R88vBx7veHT6ZrVkDbjcePIqpIJGoQ8wuTmaZgOH0LFgE2HG5zzDdGaV6D52-_slfdGfoRTYSgLxQQHdqPxpgS10GJ4ReUHYq7fPESIrA4Ia3pIovdLa-r8B7TS9_JmkIP6GNg9t2WoEgfkEnHAnrFZ7p4phmV1hVNsJdlfkdpEhalWNU9ToeOfbRB_OAa0YbAytCt9elSur9-rs-XsiN3FE90je8wIsr0MeRSRBtz2a"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-16 docked left-0 h-full w-64 border-r border-white/10 bg-slate-950/90 backdrop-blur-2xl shadow-2xl z-40 hidden md:flex">
+<div class="p-6 border-b border-white/10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center border border-teal-500/20">
+<span class="material-symbols-outlined text-teal-400" data-icon="shield">shield</span>
+</div>
+<div>
+<div class="text-lg font-black text-teal-500 font-h1">System Admin</div>
+<div class="text-[10px] uppercase tracking-widest text-slate-500 font-label-caps">Incident Command</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-4 space-y-1 font-['Space_Grotesk'] text-sm font-medium">
+<a class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:bg-white/5 hover:text-white hover:translate-x-1 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="bg-teal-500/10 text-teal-400 border-l-4 border-teal-500 flex items-center gap-3 px-4 py-3 hover:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
+<span>Personnel</span>
+</a>
+<a class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:bg-white/5 hover:text-white hover:translate-x-1 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Clients</span>
+</a>
+<a class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:bg-white/5 hover:text-white hover:translate-x-1 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+<span>Services</span>
+</a>
+<a class="text-slate-400 flex items-center gap-3 px-4 py-3 hover:bg-white/5 hover:text-white hover:translate-x-1 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span>Security Logs</span>
+</a>
+</nav>
+<div class="p-4 border-t border-white/10 space-y-1">
+<button class="w-full mb-4 bg-teal-500 text-slate-950 font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 hover:bg-teal-400 transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>New Service</span>
+</button>
+<a class="text-slate-400 flex items-center gap-3 px-4 py-2 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="text-slate-400 flex items-center gap-3 px-4 py-2 hover:bg-white/5 hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="md:ml-64 pt-24 px-container-padding pb-12 min-h-screen">
+<div class="max-w-7xl mx-auto space-y-stack-lg">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<nav class="flex items-center gap-2 text-on-primary-container font-label-caps text-[10px] uppercase tracking-widest">
+<a class="hover:text-secondary" href="#">Services</a>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<a class="hover:text-secondary" href="#">Google Cloud</a>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="text-secondary">Personnel</span>
+</nav>
+<h1 class="font-h1 text-h2 text-on-background">Manage Service Personnel</h1>
+<p class="text-on-primary-container font-body-md max-w-2xl">Administer access controls and operational roles for the Google Cloud infrastructure node. Search and invite new team members or clients to this service instance.</p>
+</div>
+<div class="flex gap-stack-md">
+<div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="text-label-caps font-mono-code text-secondary">Service: Active</span>
+</div>
+</div>
+</div>
+<!-- Dashboard Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Search & Discovery (4 Cols) -->
+<section class="lg:col-span-5 space-y-gutter">
+<div class="glass-panel p-6 rounded-xl space-y-6">
+<div class="flex items-center justify-between">
+<h2 class="font-h3 text-h3 text-on-background">Add New Member</h2>
+<span class="material-symbols-outlined text-on-primary-container">person_add</span>
+</div>
+<div class="space-y-4">
+<div class="relative group">
+<input class="w-full bg-white/5 border border-white/10 rounded-lg py-4 pl-12 pr-4 text-on-background focus:border-secondary focus:ring-1 focus:ring-secondary/50 outline-none transition-all placeholder:text-slate-600 font-body-md" placeholder="Search by phone or username..." type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-secondary transition-colors">search</span>
+</div>
+<div class="space-y-3">
+<p class="text-[10px] font-label-caps uppercase tracking-wider text-slate-500">Quick Search Results</p>
+<!-- Mock Result 1 -->
+<div class="glass-panel p-4 rounded-lg flex items-center justify-between hover:border-secondary/40 transition-all group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Headshot of a male software engineer with a focused expression, set against a dark architectural background with subtle cyan accent lighting. The image captures a high-tech, modern professional aesthetic with clean lines and premium lighting quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5iiiArnkjekyIi2G5SmJrHNozVH6IhFccZul80N5v0HuJIUzB-PntcG4sFtxUygPgK2VwGbdFu8F0hfDaLROaQs_2JWCUXk9Vz_mEusQnYxV-ui-NnFsChAS1QuqLdsckgTy6OLS1Yr3mHtndd2exTsz8IBjSNQXEONuHodXdBZ3ofnzLzKEDN-6kgFtSBjomfwPaeHaFIUndmUVgu9ck4JQKmC49VvtSa79kmds41z30aXI4-4x2jQi6HUizDUmgHG1mxNMi1AY-"/>
+</div>
+<div>
+<p class="font-body-md text-white font-medium">Alex Chen</p>
+<p class="text-[11px] font-mono-code text-slate-500">@achen_ops</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="bg-secondary/10 border border-secondary/20 text-secondary text-[11px] font-bold px-3 py-1.5 rounded hover:bg-secondary hover:text-on-secondary transition-all">Staff</button>
+<button class="bg-white/5 border border-white/10 text-white/70 text-[11px] font-bold px-3 py-1.5 rounded hover:bg-white/10 transition-all">Client</button>
+</div>
+</div>
+<!-- Mock Result 2 -->
+<div class="glass-panel p-4 rounded-lg flex items-center justify-between hover:border-secondary/40 transition-all">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female cybersecurity expert in a professional dark-themed office. She has a confident demeanor, illuminated by soft blue and teal lights that create a cinematic, high-density command center atmosphere. The overall style is modern corporate with a futuristic edge." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQEWncLmkj3q9vrEXAawSua2g5niNh8EHwAHexiBCC3B7W3_SzD_NnxVhfS8Uv6X2YgXpWKbm8J01arhbwMrDS7iK_JU6ETABt1WNeRC3WvWSyjYSPW6rK9vtQnqROG0vW12YecV0hFAvTWGo_hVVDOPp0fYAHNgLdJV8JgtuWVhaubpHAgpl6HDFyTdFLjDL16UAA1jMtSZUsfrQNuZlaRbDjVOAzVxSEOJYOByiWLyEOKpElP5gR0EDxNXFhKrmm_igHWiOjPRtR"/>
+</div>
+<div>
+<p class="font-body-md text-white font-medium">Sarah Jenkins</p>
+<p class="text-[11px] font-mono-code text-slate-500">+1 (555) 012-3456</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="bg-secondary/10 border border-secondary/20 text-secondary text-[11px] font-bold px-3 py-1.5 rounded hover:bg-secondary hover:text-on-secondary transition-all">Staff</button>
+<button class="bg-white/5 border border-white/10 text-white/70 text-[11px] font-bold px-3 py-1.5 rounded hover:bg-white/10 transition-all">Client</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Usage Stats / Insights Card -->
+<div class="glass-panel p-6 rounded-xl border-t-2 border-secondary">
+<div class="flex items-center justify-between mb-4">
+<p class="text-label-caps font-bold text-on-background">Service Capacity</p>
+<span class="text-secondary font-mono-code text-sm">74%</span>
+</div>
+<div class="w-full bg-white/5 h-2 rounded-full overflow-hidden mb-6">
+<div class="bg-secondary h-full rounded-full w-[74%]"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-white/5 rounded-lg border border-white/10">
+<p class="text-slate-500 text-[10px] uppercase font-label-caps">Staff Seats</p>
+<p class="text-xl font-h3 text-white">12 / 15</p>
+</div>
+<div class="p-3 bg-white/5 rounded-lg border border-white/10">
+<p class="text-slate-500 text-[10px] uppercase font-label-caps">Client Slots</p>
+<p class="text-xl font-h3 text-white">42 / 60</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Current Personnel (7 Cols) -->
+<section class="lg:col-span-7 space-y-gutter">
+<!-- Assigned Staff Section -->
+<div class="glass-panel rounded-xl overflow-hidden">
+<div class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">badge</span>
+<h3 class="font-h3 text-body-lg font-bold text-on-background uppercase tracking-wider">Assigned Staff</h3>
+</div>
+<span class="px-2 py-0.5 bg-secondary/10 text-secondary text-[10px] font-bold rounded border border-secondary/20">Operational Tier 1</span>
+</div>
+<div class="divide-y divide-white/5">
+<!-- Staff Row 1 -->
+<div class="p-4 flex items-center justify-between group hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-lg border border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up professional headshot of a male DevOps lead. He has a sharp, intelligent gaze and is positioned in a dimly lit server room environment with rhythmic teal lighting patterns. The image conveys high technical competence and reliability within a premium UI framework." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR4ptQ_nCli8oqmoeu8buJvCw_UsOkeyK0UxKJPKHFCxnW8KK0Sd-FA-JXLY9nN-Yn_nqUdG1tfdDD2siwRZ0l48I8UHFZo1yLaCVKhduv90y-PfEFsHDa_xJ-EniYFYnpz87YuOv6kQBE6oBKAdC71XuanSaRKZ5Gt8aP-pz8oPbXRP7BnuMrRMGHPkLbZyQ5OyrlXurVcYcQk3AMTypja3xQuGz3N93CKWU7qt9ui8BhEoA8XR8-iB14gm2AdiHVgZL-V2pWfnj7"/>
+</div>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-secondary border-2 border-background rounded-full"></div>
+</div>
+<div>
+<p class="font-body-md text-white font-semibold">Marcus Thorne</p>
+<p class="text-sm font-mono-code text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">shield</span>
+                                            Security Lead
+                                        </p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right hidden sm:block">
+<p class="text-[10px] text-slate-500 uppercase font-label-caps">Added</p>
+<p class="text-xs text-white/70">Oct 12, 2023</p>
+</div>
+<button class="p-2 text-slate-500 hover:text-error hover:bg-error/10 rounded-lg transition-all active:scale-90">
+<span class="material-symbols-outlined">person_remove</span>
+</button>
+</div>
+</div>
+<!-- Staff Row 2 -->
+<div class="p-4 flex items-center justify-between group hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-lg border border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a female cloud architect in a sleek, minimalist tech office. Her expression is focused and professional, highlighted by soft atmospheric lighting that emphasizes deep navy and vibrant teal tones. The image represents modern enterprise-level personnel in a high-stakes environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiWrO2Vapi19LyGI79tAo7l_LEKx-9SMGq0f2CmspXdEGCCRrSPxCDMCcRkSeoR37cq1ngxE9iW0mGrYSpabO2Y6zEeGXdOLfd_8BD2J-7j5KI6erQ-p8-TyVHUB-bCXAnv87szbxDHZswfwO9EskryoyUt31k6UJ5DSCUOBtCA8aM0r0j9cx30ZbIxfUU9RmcO68WOPSxMzyRP-EKZanXMvWDdPNiol2ELA4Og16SwBruNHBrBjuX7O8_zdUam_yGu1jQqbYSV0NW"/>
+</div>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-secondary border-2 border-background rounded-full"></div>
+</div>
+<div>
+<p class="font-body-md text-white font-semibold">Elena Rodriguez</p>
+<p class="text-sm font-mono-code text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+                                            Infrastructure Engineer
+                                        </p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right hidden sm:block">
+<p class="text-[10px] text-slate-500 uppercase font-label-caps">Added</p>
+<p class="text-xs text-white/70">Nov 05, 2023</p>
+</div>
+<button class="p-2 text-slate-500 hover:text-error hover:bg-error/10 rounded-lg transition-all active:scale-90">
+<span class="material-symbols-outlined">person_remove</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Assigned Clients Section -->
+<div class="glass-panel rounded-xl overflow-hidden">
+<div class="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">group</span>
+<h3 class="font-h3 text-body-lg font-bold text-on-background uppercase tracking-wider">Assigned Clients</h3>
+</div>
+<span class="text-on-primary-container font-mono-code text-xs">Total: 42 Active</span>
+</div>
+<div class="divide-y divide-white/5">
+<!-- Client Row 1 -->
+<div class="p-4 flex items-center justify-between group hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-white/5 flex items-center justify-center border border-white/10">
+<span class="material-symbols-outlined text-tertiary">apartment</span>
+</div>
+<div>
+<p class="font-body-md text-white font-semibold">Quantum Dynamics Inc.</p>
+<p class="text-xs text-slate-500">Tier: Enterprise Platinum</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right hidden sm:block">
+<p class="text-[10px] text-slate-500 uppercase font-label-caps">Monitoring</p>
+<p class="text-xs text-secondary">Active Ping</p>
+</div>
+<button class="p-2 text-slate-500 hover:text-error hover:bg-error/10 rounded-lg transition-all active:scale-90">
+<span class="material-symbols-outlined">remove_circle_outline</span>
+</button>
+</div>
+</div>
+<!-- Client Row 2 -->
+<div class="p-4 flex items-center justify-between group hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-white/5 flex items-center justify-center border border-white/10">
+<span class="material-symbols-outlined text-tertiary">rocket_launch</span>
+</div>
+<div>
+<p class="font-body-md text-white font-semibold">Nebula Ventures</p>
+<p class="text-xs text-slate-500">Tier: Standard SaaS</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right hidden sm:block">
+<p class="text-[10px] text-slate-500 uppercase font-label-caps">Monitoring</p>
+<p class="text-xs text-slate-400">Idle</p>
+</div>
+<button class="p-2 text-slate-500 hover:text-error hover:bg-error/10 rounded-lg transition-all active:scale-90">
+<span class="material-symbols-outlined">remove_circle_outline</span>
+</button>
+</div>
+</div>
+</div>
+<button class="w-full py-3 text-sm text-slate-500 hover:text-white hover:bg-white/5 transition-all font-medium border-t border-white/5">
+                            View All 42 Assigned Clients
+                        </button>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Contextual FAB - Restricted to Service Dashboards -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-secondary text-on-secondary rounded-full shadow-[0_0_20px_rgba(68,226,205,0.4)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined font-bold text-2xl" style="font-variation-settings: 'wght' 700;">add</span>
+</button>
+</body></html>

@@ -1,0 +1,12 @@
+Thiết kế một trang web tên là IncidentX
+
+
+Truy cập vào là một trang chủ, có getstart, nút signin và có thể cuộn để đọc cách sử dụng, thông tin ứng dụng, người phát triển, mục tiêu là demo hackathon
+
+Trang signin/signup, người dùng đăng nhập bằng sdt/mật khẩu, google, facebook, whatapps, v.v
+
+Khi đăng nhập, họ sẽ vào trang chọn dịch vụ - tạo một list các dịch vụ (mock) như facebook aws google có thể bấm được, góc phải có nơi config thông tin cơ bản người dùng (tên, ảnh đại diện, v.v)
+
+Bấm chọn dịch vụ cùng với vai trò của họ (nhân viên hay khách hàng) với điền mã code, đưa họ đến trang dịch vụ, có logo dịch vụ ở trên (to), ở nội dung trang hiện thị các app của dịch vụ sở hữu (như google thì có drive, gemini, v.v), ở góc phải có nơi config thông tin của user (được dùng riêng trong dịch vụ, mặt định sẽ là thông tin lấy sau đăng nhập), thông tin bot, thông tin của nhân viên (nếu là nhân viên) như chức vụ, tên. Có chức năng thêm/xoá nhân viên, khách hàng (chỉ có nhân viên tạo phòng mới làm được) 
+
+Bấm vào app thì sẽ hiển thị ra giao diện nhắn tin, ở mỗi chat sẽ có 1 khách hàng, các nhân viên và 1 botchat

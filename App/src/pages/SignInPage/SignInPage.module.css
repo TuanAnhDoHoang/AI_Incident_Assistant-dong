@@ -1,0 +1,382 @@
+/* ===== Sign In Page Styles ===== */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 80px 24px;
+}
+
+.glow1 {
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: rgba(68, 226, 205, 0.05);
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.glow2 {
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: rgba(123, 208, 255, 0.05);
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.grid {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 7fr 5fr;
+  }
+}
+
+/* ── Hero Side ── */
+.heroSide {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .heroSide {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+}
+
+.heroLabel {
+  color: #44e2cd;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 48px;
+  line-height: 56px;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+.heroAccent {
+  color: #44e2cd;
+}
+
+.heroDesc {
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--color-on-surface-variant);
+  max-width: 480px;
+}
+
+.heroCards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.heroCard {
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.heroCardBorderLeft {
+  border-left: 4px solid #44e2cd;
+}
+
+.heroCardBorderTertiary {
+  border-left: 4px solid #7bd0ff;
+}
+
+.heroCard h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  margin-top: 8px;
+}
+
+.heroCard p {
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+}
+
+/* ── Form Side ── */
+.formCard {
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+@media (min-width: 768px) {
+  .formCard {
+    padding: 40px;
+  }
+}
+
+.formHeader {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .formHeader {
+    text-align: left;
+  }
+}
+
+.formLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 1024px) {
+  .formLogo {
+    justify-content: flex-start;
+  }
+}
+
+.formLogoIcon {
+  width: 40px;
+  height: 40px;
+  background: #44e2cd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #003731;
+}
+
+.formLogoText {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+.formTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.formSubtitle {
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+  margin-left: 4px;
+}
+
+.inputLabelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.forgotLink {
+  color: #44e2cd;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.forgotLink:hover {
+  text-decoration: underline;
+}
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s;
+  border-radius: 8px;
+}
+
+.inputWrap:focus-within {
+  box-shadow: 0 0 15px rgba(68, 226, 205, 0.2);
+  border-color: #44e2cd;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 16px;
+  color: var(--color-on-surface-variant);
+}
+
+.input {
+  width: 100%;
+  background: transparent;
+  padding: 12px 16px 12px 48px;
+  color: var(--color-on-surface);
+  font-family: 'Space Grotesk', monospace;
+  font-size: 14px;
+}
+
+.input::placeholder {
+  color: rgba(144, 144, 151, 0.5);
+}
+
+.togglePassword {
+  position: absolute;
+  right: 16px;
+  color: var(--color-on-surface-variant);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.togglePassword:hover {
+  color: #44e2cd;
+}
+
+.submitBtn {
+  width: 100%;
+  background: #44e2cd;
+  color: #003731;
+  font-weight: 700;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  box-shadow: 0 0 20px rgba(68, 226, 205, 0.2);
+  transition: all 0.2s;
+}
+
+.submitBtn:hover {
+  box-shadow: 0 0 30px rgba(68, 226, 205, 0.4);
+}
+
+.submitBtn:active {
+  transform: scale(0.98);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.divider {
+  position: relative;
+  margin: 40px 0;
+}
+
+.dividerLine {
+  width: 100%;
+  border-top: 1px solid rgba(144, 144, 151, 0.2);
+}
+
+.dividerText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #0f172a;
+  padding: 0 16px;
+  color: var(--color-outline);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.socialGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.socialBtn {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.socialBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.socialBtn img {
+  width: 20px;
+  height: 20px;
+  filter: grayscale(1);
+  transition: filter 0.2s;
+}
+
+.socialBtn:hover img {
+  filter: grayscale(0);
+}
+
+.signupText {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+}
+
+.signupLink {
+  color: #44e2cd;
+  font-weight: 700;
+}
+
+.signupLink:hover {
+  text-decoration: underline;
+}
+
+.errorText {
+  color: var(--color-error);
+  font-size: 14px;
+  text-align: center;
+}
