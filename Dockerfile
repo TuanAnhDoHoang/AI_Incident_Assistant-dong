@@ -1,0 +1,15 @@
+FROM maven:3.9-eclipse-temurin-21 AS builder
+WORKDIR /app
+
+COPY AI_Incident_Assistant/pom.xml ./AI_Incident_Assistant/pom.xml
+COPY AI_Incident_Assistant/src ./AI_Incident_Assistant/src
+
+RUN mvn -f AI_Incident_Assistant/pom.xml clean package -DskipTests
+
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+
+COPY --from=builder /app/AI_Incident_Assistant/target/*.jar app.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
