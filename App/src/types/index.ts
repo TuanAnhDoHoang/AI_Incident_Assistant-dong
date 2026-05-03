@@ -40,12 +40,20 @@ export interface ServiceMember {
   initials: string;
 }
 
+export interface Suggestion {
+  username: string;
+  displayName: string;
+  score: number;
+  reason: string;
+}
+
 export interface ChatMessage {
   id: string;
   sender: ChatParticipant;
   content: string;
   timestamp: string;
   type: 'customer' | 'staff' | 'bot' | 'system';
+  suggestions?: Suggestion[];
 }
 
 export interface ChatParticipant {
