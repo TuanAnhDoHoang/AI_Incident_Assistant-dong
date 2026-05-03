@@ -45,7 +45,7 @@ Phạm vi MVP được giới hạn rõ ràng: **chỉ text**, **1 Jira project*
 - Báo bug mới từ group chat.
 - Phát hiện bug trùng.
 - Khách tag nhân viên nhưng không phản hồi.
-- Team quá tải và cần đề xuất người hỗ trợ.
+- Đề xuất và phân bổ nhân viên phù hợp cho sự cố.
 
 ### Hướng dẫn chạy bằng Docker Compose
 Yêu cầu:
@@ -135,7 +135,7 @@ The MVP scope is intentionally small: **text-only**, **1 Jira project**, and **s
 - New bug report from chat.
 - Duplicate bug detection.
 - Customer tags a staff member but no reply is received.
-- Team overload and support suggestion.
+- Suggestion and allocation appropriate personnel for the incident.
 
 ### Run With Docker Compose
 Requirements:
@@ -162,7 +162,7 @@ docker compose up -d --build frontend
 ```
 
 After startup:
-- Frontend: `http://localhost:5173`
+- Frontend: `http://localhost:3000`
 - Backend API: `http://localhost:8080`
 - PostgreSQL: `localhost:5432`
 
