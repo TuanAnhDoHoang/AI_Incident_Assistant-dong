@@ -54,24 +54,35 @@ export interface ServiceRoleEntry {
 }
 
 export const serviceRoles: Record<string, ServiceRoleEntry[]> = {
-  // anhdoo is admin in AWS with 2 staff
+  // Common staff for all services
   aws: [
     { userId: 'anhdoo', role: 'admin' },
-    { userId: 'staff-linh', role: 'staff' },
     { userId: 'staff-huy', role: 'staff' },
+    { userId: 'staff-quan', role: 'staff' },
+    { userId: 'staff-an', role: 'staff' },
+    { userId: 'staff-vy', role: 'staff' },
   ],
-  // DAT is admin in Google Cloud with 2 staff, anhdoo is a client
   gcloud: [
     { userId: 'dat', role: 'admin' },
-    { userId: 'staff-mai', role: 'staff' },
-    { userId: 'staff-tuan', role: 'staff' },
+    { userId: 'staff-huy', role: 'staff' },
+    { userId: 'staff-quan', role: 'staff' },
+    { userId: 'staff-an', role: 'staff' },
+    { userId: 'staff-vy', role: 'staff' },
     { userId: 'anhdoo', role: 'client' },
   ],
-  // CUONG is admin in Vercel with anhdoo + one other as staff
   vercel: [
     { userId: 'cuong', role: 'admin' },
-    { userId: 'anhdoo', role: 'staff' },
-    { userId: 'staff-khoa', role: 'staff' },
+    { userId: 'staff-huy', role: 'staff' },
+    { userId: 'staff-quan', role: 'staff' },
+    { userId: 'staff-an', role: 'staff' },
+    { userId: 'staff-vy', role: 'staff' },
+  ],
+  meta: [
+    { userId: 'anhdoo', role: 'admin' },
+    { userId: 'staff-huy', role: 'staff' },
+    { userId: 'staff-quan', role: 'staff' },
+    { userId: 'staff-an', role: 'staff' },
+    { userId: 'staff-vy', role: 'staff' },
   ],
 };
 
@@ -87,18 +98,12 @@ export function getUserRoleInService(userId: string, serviceId: string): 'admin'
 // ── All People Directory ─────────────────
 // ══════════════════════════════════════════
 // These are the staff members, clients, and people who can be added.
-
 export const allPeople: ServiceMember[] = [
-  // ── Staff in AWS (anhdoo's service) ──
-  { id: 'staff-linh', name: 'Nguyen Linh',     role: 'Backend Engineer',       avatar: '', type: 'staff', dateAdded: 'Oct 12, 2023', status: 'online',  initials: 'NL' },
-  { id: 'staff-huy',  name: 'Tran Huy',        role: 'DevOps Specialist',      avatar: '', type: 'staff', dateAdded: 'Nov 05, 2023', status: 'online',  initials: 'TH' },
-
-  // ── Staff in Google Cloud (DAT's service) ──
-  { id: 'staff-mai',  name: 'Le Thi Mai',      role: 'Cloud Architect',        avatar: '', type: 'staff', dateAdded: 'Sep 20, 2023', status: 'online',  initials: 'LM' },
-  { id: 'staff-tuan', name: 'Pham Tuan',       role: 'Security Analyst',       avatar: '', type: 'staff', dateAdded: 'Oct 15, 2023', status: 'offline', initials: 'PT' },
-
-  // ── Staff in Vercel (CUONG's service) ── anhdoo is also staff here but handled by user lookup
-  { id: 'staff-khoa', name: 'Vo Khoa',         role: 'Frontend Engineer',      avatar: '', type: 'staff', dateAdded: 'Nov 10, 2023', status: 'online',  initials: 'VK' },
+  // ── New Staff Team ──
+  { id: 'staff-huy',  name: 'Huy',         role: 'DevOps Specialist',      avatar: '', type: 'staff', dateAdded: 'Nov 05, 2023', status: 'online',  initials: 'H' },
+  { id: 'staff-quan', name: 'Quan',        role: 'Backend Engineer',       avatar: '', type: 'staff', dateAdded: 'Dec 01, 2023', status: 'online',  initials: 'Q' },
+  { id: 'staff-an',   name: 'An',          role: 'Frontend Engineer',      avatar: '', type: 'staff', dateAdded: 'Dec 05, 2023', status: 'online',  initials: 'A' },
+  { id: 'staff-vy',   name: 'Vy',          role: 'Security Analyst',       avatar: '', type: 'staff', dateAdded: 'Dec 10, 2023', status: 'online',  initials: 'V' },
 
   // ── The 3 main users as ServiceMember format (for display in lists) ──
   { id: 'anhdoo',     name: 'Anh Doo',         role: 'System Admin',           avatar: allUsers[0].avatar, type: 'staff', dateAdded: 'Aug 01, 2023', status: 'online',  initials: 'AD' },
