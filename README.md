@@ -47,6 +47,49 @@ Phạm vi MVP được giới hạn rõ ràng: **chỉ text**, **1 Jira project*
 - Khách tag nhân viên nhưng không phản hồi.
 - Team quá tải và cần đề xuất người hỗ trợ.
 
+### Hướng dẫn chạy bằng Docker Compose
+Yêu cầu:
+- Docker Desktop đang chạy.
+- File `team_members_9_nhan_vien_3_nhom.csv` nằm ở thư mục root của project nếu chạy database seed.
+- Không cần cài Node.js, React, Vite, Java hay Maven trực tiếp trên máy vì Dockerfile đã cấu hình sẵn các môi trường này.
+
+Chạy toàn bộ hệ thống:
+
+```bash
+docker compose up --build
+```
+
+Chạy ở chế độ nền:
+
+```bash
+docker compose up -d --build
+```
+
+Chỉ chạy frontend React/Vite:
+
+```bash
+docker compose up -d --build frontend
+```
+
+Sau khi chạy thành công:
+- Frontend: `http://localhost:5173`
+- Backend API: `http://localhost:8080`
+- PostgreSQL: `localhost:5432`
+
+Một số lệnh hữu ích:
+
+```bash
+docker compose ps
+docker compose logs -f frontend
+docker compose logs -f app
+docker compose down
+```
+
+Ghi chú Docker:
+- `Dockerfile` ở root dùng multi-stage build.
+- Service `frontend` dùng target `frontend-dev` để chạy React/Vite.
+- Service `app` dùng target `backend` để chạy backend Java.
+
 ---
 
 ## 🇬🇧 English
@@ -93,6 +136,49 @@ The MVP scope is intentionally small: **text-only**, **1 Jira project**, and **s
 - Duplicate bug detection.
 - Customer tags a staff member but no reply is received.
 - Team overload and support suggestion.
+
+### Run With Docker Compose
+Requirements:
+- Docker Desktop is running.
+- `team_members_9_nhan_vien_3_nhom.csv` exists in the project root if you want PostgreSQL seed data to load.
+- You do not need to install Node.js, React, Vite, Java, or Maven locally because the root Dockerfile provides these environments.
+
+Run the full stack:
+
+```bash
+docker compose up --build
+```
+
+Run in the background:
+
+```bash
+docker compose up -d --build
+```
+
+Run only the React/Vite frontend:
+
+```bash
+docker compose up -d --build frontend
+```
+
+After startup:
+- Frontend: `http://localhost:5173`
+- Backend API: `http://localhost:8080`
+- PostgreSQL: `localhost:5432`
+
+Useful commands:
+
+```bash
+docker compose ps
+docker compose logs -f frontend
+docker compose logs -f app
+docker compose down
+```
+
+Docker notes:
+- The root `Dockerfile` uses multi-stage builds.
+- The `frontend` service uses the `frontend-dev` target for React/Vite.
+- The `app` service uses the `backend` target for the Java backend.
 
 ---
 
