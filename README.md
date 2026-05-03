@@ -72,7 +72,7 @@ docker compose up -d --build frontend
 ```
 
 Sau khi chạy thành công:
-- Frontend: `http://localhost:5173`
+- Frontend: `http://localhost:3000`
 - Backend API: `http://localhost:8080`
 - PostgreSQL: `localhost:5432`
 
