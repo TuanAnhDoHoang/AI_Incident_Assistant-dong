@@ -55,6 +55,17 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState('');
 
+  // Sidebar & Resizing State
+  const [showIncidentDetails, setShowIncidentDetails] = useState(false);
+  const [incidentsData, setIncidentsData] = useState<any[]>([]);
+  const [isLoadingIncidents, setIsLoadingIncidents] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(320);
+  const [isResizing, setIsResizing] = useState(false);
+
+  // Incident Detail State
+  const [selectedIncident, setSelectedIncident] = useState<any | null>(null);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+
   // Reset messages when switching client
   useEffect(() => {
     setMessages(initialMessages);
@@ -63,6 +74,44 @@ export default function ChatPage() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Sidebar Resizing Logic
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+      // Calculate new width from right edge
+      const newWidth = window.innerWidth - e.clientX;
+      if (newWidth > 280 && newWidth < 800) {
+        setSidebarWidth(newWidth);
+      }
+    };
+    const handleMouseUp = () => setIsResizing(false);
+
+    if (isResizing) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing]);
+
+  const handleIncidentClick = async (key: string) => {
+    setIsLoadingDetail(true);
+    const API_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8080/api';
+    try {
+      const res = await fetch(`${API_URL}/incidents/${key}`);
+      if (res.ok) {
+        const data = await res.json();
+        setSelectedIncident(data);
+      }
+    } catch (err) {
+      console.error('Fetch incident detail error:', err);
+    } finally {
+      setIsLoadingDetail(false);
+    }
+  };
 
   if (!result) {
     return (
@@ -87,20 +136,194 @@ export default function ChatPage() {
     isOnline: true,
   };
 
-  // Simulated API for Bot Commands
-  const mockBotApi = async (command: string, params?: string) => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+  // Real API for Bot Commands and Triage
+  const botApi = async (messageText: string): Promise<{ content: string; suggestions?: any[] } | null> => {
+    const API_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8080/api';
+    const parts = messageText.trim().split(' ');
+    const command = parts[0];
 
-    switch (command) {
-      case '/bug':
-        return `[AIA] ✅ Đã ghi nhận sự cố mới\n\nTicket: SUP-102\nTitle: Su co General: ${params || 'N/A'}\nSeverity: P1\nSLA: 30 phút\nStatus: Open`;
-      case '/status':
-        return `📋 Incident đang mở (5):\n\n• SUP-101 [P1] Sự cố Payment: /bug Khách hàng báo lỗi không thể thanh toán qua VNPay trên iOS\n• SUP-101 [P1] Su co Payment: Hệ thống thanh toán bị lỗi, nhiều khách không checkout được\n• SUP-102 [P1] P1 incident: Payment failed for all users since 10am, system is down\n• SUP-101 [P1] Su co Login: @incident_assist_bot Mọi người ơi hình như hệ thống đang sập à? Nhiều \n• SUP-102 [P1] Su co General: @kudoissei Anh check giúp em lỗi xuất file Excel báo cáo doanh thu trê`;
-      case '/help':
-        return `Lệnh hỗ trợ:\n/bug [mô tả] – Báo cáo lỗi ngay lập tức\n/status – Xem danh sách incident đang xử lý\n/help – Hướng dẫn này`;
-      default:
-        return null;
+    // Case 1: /status command - Fetch incident list
+    if (command === '/status') {
+      try {
+        const res = await fetch(`${API_URL}/incidents`);
+        if (!res.ok) throw new Error('Failed to fetch');
+        const incidents: any[] = await res.json();
+
+        const openIncidents = incidents.filter(i => i.status !== 'Resolved' && i.status !== 'Closed');
+        if (openIncidents.length === 0) return { content: '📋 Hiện không có incident nào đang mở.' };
+
+        let report = `📋 Incident đang mở (${openIncidents.length}):\n\n`;
+        openIncidents.slice(0, 5).forEach(inc => {
+          report += `• ${inc.jiraIssueKey} [${inc.severity}] ${inc.title}\n`;
+        });
+        if (openIncidents.length > 5) report += `\n... và ${openIncidents.length - 5} incident khác.`;
+        return { content: report };
+      } catch (err) {
+        console.error('Fetch status error:', err);
+        return { content: '❌ Lỗi khi lấy danh sách incident từ server.' };
+      }
+    }
+
+    // Case 2: /detail - Everyone (Table View)
+    if (command === '/detail') {
+      try {
+        const res = await fetch(`${API_URL}/incidents`);
+        if (!res.ok) throw new Error('Failed to fetch');
+        const incidents: any[] = await res.json();
+
+        let table = `📋 **Bảng chi tiết Incident**\n\n`;
+        table += `| Key | Title | Status | Severity | Assigned |\n`;
+        table += `| :--- | :--- | :--- | :--- | :--- |\n`;
+
+        incidents.forEach(inc => {
+          table += `| **${inc.jiraIssueKey}** | ${inc.title} | ${inc.status} | ${inc.severity} | ${inc.assignedTo || '---'} |\n`;
+        });
+
+        return { content: table };
+      } catch (err) {
+        return { content: '❌ Lỗi khi lấy danh sách chi tiết incident.' };
+      }
+    }
+
+    // Case 3: /severity [issueKey] [level] - Staff or Admin
+    if (command === '/severity') {
+      if (userRole !== 'staff' && userRole !== 'admin') {
+        return { content: '🚫 Bạn không có quyền thay đổi độ ưu tiên của incident.' };
+      }
+      const issueKey = parts[1];
+      const newSeverity = parts[2];
+      if (!issueKey || !newSeverity) return { content: '❌ Cú pháp: /severity [issueKey] [P1|P2|P3|P4]' };
+
+      try {
+        const res = await fetch(`${API_URL}/commands/severity?issueKey=${issueKey}&severity=${newSeverity}`, {
+          method: 'POST'
+        });
+        if (!res.ok) throw new Error('Failed');
+        const inc = await res.json();
+        return { content: `✅ Đã cập nhật mức độ nghiêm trọng của ${issueKey} thành **${inc.severity}**.` };
+      } catch (err) {
+        return { content: `❌ Không thể cập nhật mức độ nghiêm trọng cho ${issueKey}.` };
+      }
+    }
+
+    // Case 4: /suggest [issueKey] - ONLY Admin
+    if (command === '/suggest') {
+      if (userRole !== 'admin') {
+        return { content: '🚫 Chỉ quản trị viên mới có thể yêu cầu gợi ý nhân sự điều động.' };
+      }
+      const issueKey = parts[1];
+      if (!issueKey) return { content: '❌ Vui lòng cung cấp Issue Key. VD: /suggest SUP-101' };
+
+      try {
+        const res = await fetch(`${API_URL}/commands/suggest/${issueKey}`);
+        if (!res.ok) throw new Error('Failed to fetch suggestions');
+        const suggestions: any[] = await res.json();
+
+        return {
+          content: `🔍 Team dispatch suggestions for **${issueKey}**:`,
+          suggestions
+        };
+      } catch (err) {
+        console.error('Fetch suggestions error:', err);
+        return { content: `❌ Không thể lấy gợi ý nhân sự cho ${issueKey}.` };
+      }
+    }
+
+    // Case 5: /sla [period] - ONLY Admin
+    if (command === '/sla') {
+      if (userRole !== 'admin') {
+        return { content: '🚫 Chỉ quản trị viên mới có quyền xem báo cáo SLA.' };
+      }
+      const period = parts[1] || 'week';
+      try {
+        const res = await fetch(`${API_URL}/commands/report/sla?period=${period}`);
+        if (!res.ok) throw new Error('Failed');
+        const report = await res.json();
+
+        return {
+          content: `📊 **SLA Report (${report.period})**\n\n` +
+            `• Total Incidents: ${report.totalIncidents}\n` +
+            `• SLA Breaches: ${report.breachCount}\n` +
+            `• Compliance Rate: ${((1 - report.breachCount / (report.totalIncidents || 1)) * 100).toFixed(1)}%\n\n` +
+            (report.breaches.length > 0 ? `⚠️ Các trường hợp vi phạm mới nhất:\n` + report.breaches.slice(0, 3).map((b: any) => `- ${b.jiraIssueKey} (Breached at: ${new Date(b.breachAt).toLocaleDateString()})`).join('\n') : `✅ Không có vi phạm SLA nào trong kỳ.`)
+        };
+      } catch (err) {
+        return { content: '❌ Lỗi khi lấy báo cáo SLA.' };
+      }
+    }
+
+    // Case 6: /help command
+    if (command === '/help') {
+      const isStaff = userRole === 'staff' || userRole === 'admin';
+      const isAdmin = userRole === 'admin';
+
+      let helpContent = `Lệnh hỗ trợ:\n` +
+        `• **/status** – Danh sách incident đang mở\n` +
+        `• **/bug [mô tả]** – Báo cáo lỗi`;
+
+      if (isStaff) {
+        helpContent += `\n• **/severity [key] [level]** – Cập nhật độ nghiêm trọng`;
+      }
+
+      if (isAdmin) {
+        helpContent += `\n• **/suggest [key]** – Gợi ý nhân sự điều động\n` +
+          `• **/sla [period]** – Báo cáo vi phạm SLA`;
+      }
+
+      return { content: helpContent };
+    }
+
+    // Case 4: /bug or any other message (for AI triage)
+    try {
+      const payload = {
+        messageId: `msg-web-${Date.now()}`,
+        platform: 'web_demo',
+        groupId: appId || 'general',
+        groupName: app?.name || 'General',
+        senderId: user?.id || 'unknown',
+        senderName: user?.name || 'User',
+        text: messageText,
+        receivedAt: new Date().toISOString()
+      };
+
+      const res = await fetch(`${API_URL}/webhooks/simulate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error('Webhook error');
+      const result = await res.json();
+
+      // Only return message if it's a bug, uncertain, or it was an explicit command
+      if (result.status === 'created') {
+        // AUTOMATION: Fetch suggestions immediately for new bugs
+        let suggestions = undefined;
+        try {
+          const suggestRes = await fetch(`${API_URL}/commands/suggest/${result.jiraIssueKey}`);
+          if (suggestRes.ok) {
+            suggestions = await suggestRes.json();
+          }
+        } catch (sErr) {
+          console.error('Auto-suggestion error:', sErr);
+        }
+
+        return {
+          content: result.message,
+          suggestions
+        };
+      }
+
+      if (result.status === 'merged' || result.status === 'needs_confirmation' || command === '/bug') {
+        return { content: result.message };
+      }
+      return null;
+    } catch (err) {
+      console.error('Bot API error:', err);
+      if (command === '/bug') {
+        return { content: '❌ Không thể kết nối với backend để tạo ticket. Vui lòng thử lại sau.' };
+      }
+      return null;
     }
   };
 
@@ -117,24 +340,47 @@ export default function ChatPage() {
     setMessages(prev => [...prev, newMsg]);
     setInput('');
 
-    // Bot command logic: only responds if command is at the start
-    const firstWord = userMessageContent.split(' ')[0];
-    const isCommand = ['/bug', '/status', '/help'].includes(firstWord);
+    // AUTOMATION: If client tags someone, simulate a "no reply" notification after a delay
+    if (userMessageContent.includes('@') && !isStaffOrAdmin) {
+      setTimeout(() => {
+        setMessages(prev => {
+          // Only show if the last message is still from the customer (simplified check)
+          const lastMsg = prev[prev.length - 1];
+          if (lastMsg && lastMsg.sender.type === 'customer') {
+            return [...prev, {
+              id: `msg-bot-notify-${Date.now()}`,
+              sender: incidentXBot,
+              content: "🤖 Bot: Nhận thấy nhân sự chưa phản hồi nhắc tên của bạn. Tôi đã gửi thông báo khẩn cấp đến Quản trị viên hệ thống để được hỗ trợ kịp thời.",
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              type: 'bot',
+            }];
+          }
+          return prev;
+        });
+      }, 8000); // 8 second simulated delay for demo
+    }
 
-    if (isCommand) {
-      const params = userMessageContent.substring(firstWord.length).trim();
-      const botReplyContent = await mockBotApi(firstWord, params);
+    // Call Bot API
+    const botResponse = await botApi(userMessageContent);
 
-      if (botReplyContent) {
-        const botReply: ChatMessage = {
-          id: `msg-bot-${Date.now()}`,
-          sender: incidentXBot,
-          content: botReplyContent,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          type: 'bot',
-        };
-        setMessages(prev => [...prev, botReply]);
+    if (botResponse) {
+      let finalContent = botResponse.content;
+
+      // AUTOMATION: Tag all suggested staff members if suggestions exist
+      if (botResponse.suggestions && botResponse.suggestions.length > 0) {
+        const allTags = botResponse.suggestions.map(s => `@${s.username}`).join(' ');
+        finalContent = `🔔 ${allTags} vui lòng kiểm tra incident này.\n\n${finalContent}`;
       }
+
+      const botReply: ChatMessage = {
+        id: `msg-bot-${Date.now()}`,
+        sender: incidentXBot,
+        content: finalContent,
+        suggestions: botResponse.suggestions,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        type: 'bot',
+      };
+      setMessages(prev => [...prev, botReply]);
     }
   };
 
@@ -239,6 +485,25 @@ export default function ChatPage() {
                           styles.messageBubbleStaff
                         } ${isRight ? styles.bubbleRight : styles.bubbleLeft}`}>
                         <p style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</p>
+
+                        {/* Suggestion Cards */}
+                        {msg.suggestions && msg.suggestions.length > 0 && (
+                          <div className={styles.suggestionsContainer}>
+                            <div className={styles.suggestionsHeader}>Team dispatch suggestion</div>
+                            {msg.suggestions.map((s, idx) => (
+                              <div key={idx} className={styles.suggestionCard}>
+                                <div className={styles.suggestionInfo}>
+                                  <div className={styles.suggestionName}>{s.displayName}</div>
+                                  <div className={styles.suggestionUser}>{s.username}</div>
+                                  <div className={styles.suggestionReason}>{s.reason}</div>
+                                </div>
+                                <div className={styles.suggestionScore}>
+                                  <div className={styles.scoreCircle}>{s.score}</div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -249,6 +514,39 @@ export default function ChatPage() {
 
             {/* Input */}
             <div className={styles.chatInputArea}>
+              {/* Quick Actions Row */}
+              <div className={styles.quickActionsRow}>
+                <button
+                  className={styles.detailActionBtn}
+                  onClick={async () => {
+                    if (showIncidentDetails) {
+                      setShowIncidentDetails(false);
+                      return;
+                    }
+
+                    setIsLoadingIncidents(true);
+                    const API_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8080/api';
+                    try {
+                      const res = await fetch(`${API_URL}/incidents`);
+                      if (res.ok) {
+                        const data = await res.json();
+                        setIncidentsData(data);
+                        setShowIncidentDetails(true);
+                      }
+                    } catch (err) {
+                      console.error('Fetch incidents error:', err);
+                    } finally {
+                      setIsLoadingIncidents(false);
+                    }
+                  }}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
+                    {showIncidentDetails ? 'group' : 'table_view'}
+                  </span>
+                  {isLoadingIncidents ? 'Loading...' : showIncidentDetails ? 'Show Participants' : 'Incidents detail'}
+                </button>
+              </div>
+
               <div className={styles.chatInputWrap}>
                 <div className={styles.chatInputBtns}>
                   <button className={styles.chatInputBtn}>
@@ -282,86 +580,237 @@ export default function ChatPage() {
             </div>
           </div>
 
+          {/* Resize Handle */}
+          <div
+            className={`${styles.resizeHandle} ${isResizing ? styles.resizeHandleActive : ''}`}
+            onMouseDown={() => setIsResizing(true)}
+          />
+
           {/* ── Participant Sidebar ── */}
-          <div className={styles.participantSidebar}>
+          <div className={styles.participantSidebar} style={{ width: sidebarWidth }}>
             <div className={styles.participantHeader}>
-              <h3 className={styles.participantTitle}>Participants</h3>
-              <p className={styles.participantCount}>{allParticipants.length} Active in Channel</p>
+              <div className={styles.sidebarHeaderTop}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  {selectedIncident && (
+                    <button
+                      className={styles.sidebarBackBtn}
+                      onClick={() => setSelectedIncident(null)}
+                    >
+                      <span className="material-symbols-outlined" style={{ fontSize: 20 }}>arrow_back</span>
+                    </button>
+                  )}
+                  <h3 className={styles.participantTitle}>
+                    {selectedIncident ? 'Incident Detail' : showIncidentDetails ? 'Incident Details' : 'Participants'}
+                  </h3>
+                </div>
+                {(showIncidentDetails || selectedIncident) && (
+                  <button
+                    className={styles.sidebarCloseBtn}
+                    onClick={() => {
+                      setShowIncidentDetails(false);
+                      setSelectedIncident(null);
+                    }}
+                  >
+                    <span className="material-symbols-outlined">close</span>
+                  </button>
+                )}
+              </div>
+              <p className={styles.participantCount}>
+                {selectedIncident
+                  ? `Viewing ${selectedIncident.jiraIssueKey}`
+                  : showIncidentDetails
+                    ? `${incidentsData.length} Total Incidents`
+                    : `${allParticipants.length} Active in Channel`
+                }
+              </p>
             </div>
 
-            <div className={styles.participantList}>
-              {/* Customer / Active Client */}
-              {participants.clients.length > 0 && (
-                <div className={styles.participantGroup}>
-                  <p className={`${styles.participantGroupLabel} ${styles.participantGroupLabelCustomer}`}>Client</p>
-                  {participants.clients.map((p) => (
-                    <div key={p.id} className={styles.participantItem}>
+            <div className={styles.sidebarContent}>
+              {selectedIncident ? (
+                <div className={styles.incidentDetailView}>
+                  <div className={styles.detailHeader}>
+                    <div className={styles.detailTitleRow}>
+                      <span className={styles.detailKey}>{selectedIncident.jiraIssueKey}</span>
+                      <span className={`${styles.sevBadge} ${styles[`sev${selectedIncident.severity}`]}`}>
+                        {selectedIncident.severity}
+                      </span>
+                    </div>
+                    <h4 className={styles.detailTitleText}>{selectedIncident.title}</h4>
+                  </div>
+
+                  <div className={styles.detailStats}>
+                    <div className={styles.statItem}>
+                      <span className={styles.statLabel}>Status</span>
+                      <span className={`${styles.statusBadge} ${styles[`status${selectedIncident.status.replace(/\s+/g, '')}`]}`}>
+                        {selectedIncident.status}
+                      </span>
+                    </div>
+                    <div className={styles.statItem}>
+                      <span className={styles.statLabel}>Reporter</span>
+                      <span className={styles.statValue}>{selectedIncident.reporter || 'N/A'}</span>
+                    </div>
+                    <div className={styles.statItem}>
+                      <span className={styles.statLabel}>Assigned To</span>
+                      <span className={styles.statValue}>{selectedIncident.assignedTo || 'Unassigned'}</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.detailSection}>
+                    <h5 className={styles.sectionTitle}>Description</h5>
+                    <p className={styles.sectionContent}>
+                      {selectedIncident.description || 'No description provided.'}
+                    </p>
+                  </div>
+
+                  {selectedIncident.jiraUrl && (
+                    <a
+                      href={selectedIncident.jiraUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.jiraLink}
+                    >
+                      <span className="material-symbols-outlined">open_in_new</span>
+                      View in Jira
+                    </a>
+                  )}
+
+                  <div className={styles.detailActions}>
+                    <button className={styles.actionBtnPrimary}>
+                      Update Status
+                    </button>
+                    <button className={styles.actionBtnSecondary}>
+                      Assign Me
+                    </button>
+                  </div>
+                </div>
+              ) : showIncidentDetails ? (
+                <div className={styles.incidentTableContainer}>
+                  <table className={styles.incidentTable}>
+                    <thead>
+                      <tr>
+                        <th>Key</th>
+                        <th>Status</th>
+                        <th>Severity</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {incidentsData.map((inc, idx) => (
+                        <tr
+                          key={idx}
+                          className={styles.incidentRow}
+                          onClick={() => handleIncidentClick(inc.jiraIssueKey)}
+                        >
+                          <td className={styles.incKey}>{inc.jiraIssueKey}</td>
+                          <td>
+                            <span className={`${styles.statusBadge} ${styles[`status${inc.status.replace(/\s+/g, '')}`]}`}>
+                              {inc.status}
+                            </span>
+                          </td>
+                          <td>
+                            <span className={`${styles.sevBadge} ${styles[`sev${inc.severity}`]}`}>
+                              {inc.severity}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div className={styles.incidentDetailsList}>
+                    {incidentsData.map((inc, idx) => (
+                      <div
+                        key={idx}
+                        className={styles.incidentDetailItem}
+                        onClick={() => handleIncidentClick(inc.jiraIssueKey)}
+                      >
+                        <div className={styles.incItemHeader}>
+                          <span className={styles.incItemKey}>{inc.jiraIssueKey}</span>
+                          <span className={styles.incItemSev}>{inc.severity}</span>
+                        </div>
+                        <p className={styles.incItemTitle}>{inc.title}</p>
+                        <div className={styles.incItemFooter}>
+                          <span className={styles.incItemStatus}>{inc.status}</span>
+                          <span className={styles.incItemUser}>{inc.assignedTo || 'Unassigned'}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.participantList}>
+                  {/* Customer / Active Client */}
+                  {participants.clients.length > 0 && (
+                    <div className={styles.participantGroup}>
+                      <p className={`${styles.participantGroupLabel} ${styles.participantGroupLabelCustomer}`}>Client</p>
+                      {participants.clients.map((p) => (
+                        <div key={p.id} className={styles.participantItem}>
+                          <div className={styles.participantItemInfo}>
+                            <div className={styles.participantAvatar}>
+                              <div className={styles.participantAvatarImg}>
+                                {p.avatar ? (
+                                  <img src={p.avatar} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                                ) : (
+                                  getInitials(p.name)
+                                )}
+                              </div>
+                              {p.isOnline && <span className={styles.participantOnline} />}
+                            </div>
+                            <div>
+                              <p className={styles.participantName}>{p.name}</p>
+                              <p className={`${styles.participantRole} ${styles.participantRoleCustomer}`}>{p.role}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Staff / Admin Team */}
+                  <div className={styles.participantGroup}>
+                    <p className={`${styles.participantGroupLabel} ${styles.participantGroupLabelTeam}`}>Service Team</p>
+                    {participants.staff.map((p) => (
+                      <div key={p.id} className={styles.participantItem}>
+                        <div className={styles.participantItemInfo}>
+                          <div className={styles.participantAvatar}>
+                            <div className={`${styles.participantAvatarImg} ${styles.participantAvatarTeam}`}>
+                              {p.avatar ? (
+                                <img src={p.avatar} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                              ) : (
+                                getInitials(p.name)
+                              )}
+                            </div>
+                            {p.isOnline && <span className={styles.participantOnline} />}
+                          </div>
+                          <div>
+                            <p className={styles.participantName}>
+                              {p.id === user?.id ? `${p.name} (You)` : p.name}
+                            </p>
+                            <p className={`${styles.participantRole} ${styles.participantRoleTeam}`}>{p.role}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Bot */}
+                  <div className={styles.participantGroup}>
+                    <p className={`${styles.participantGroupLabel} ${styles.participantGroupLabelBot}`}>Automations</p>
+                    <div className={`${styles.participantItem} ${styles.participantItemBot}`}>
                       <div className={styles.participantItemInfo}>
                         <div className={styles.participantAvatar}>
-                          <div className={styles.participantAvatarImg}>
-                            {p.avatar ? (
-                              <img src={p.avatar} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                            ) : (
-                              getInitials(p.name)
-                            )}
+                          <div className={`${styles.participantAvatarImg} ${styles.participantAvatarBot}`}>
+                            <span className="material-symbols-outlined" style={{ fontSize: 14, color: '#2dd4bf' }}>smart_toy</span>
                           </div>
-                          {p.isOnline && <span className={styles.participantOnline} />}
                         </div>
                         <div>
-                          <p className={styles.participantName}>{p.name}</p>
-                          <p className={`${styles.participantRole} ${styles.participantRoleCustomer}`}>{p.role}</p>
+                          <p className={styles.participantName}>{participants.bot.name}</p>
+                          <p className={`${styles.participantRole} ${styles.participantRoleBot}`}>{participants.bot.role}</p>
                         </div>
                       </div>
+                      <span className={styles.participantPulse} />
                     </div>
-                  ))}
+                  </div>
                 </div>
               )}
-
-              {/* Staff / Admin Team */}
-              <div className={styles.participantGroup}>
-                <p className={`${styles.participantGroupLabel} ${styles.participantGroupLabelTeam}`}>Service Team</p>
-                {participants.staff.map((p) => (
-                  <div key={p.id} className={styles.participantItem}>
-                    <div className={styles.participantItemInfo}>
-                      <div className={styles.participantAvatar}>
-                        <div className={`${styles.participantAvatarImg} ${styles.participantAvatarTeam}`}>
-                          {p.avatar ? (
-                            <img src={p.avatar} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                          ) : (
-                            getInitials(p.name)
-                          )}
-                        </div>
-                        {p.isOnline && <span className={styles.participantOnline} />}
-                      </div>
-                      <div>
-                        <p className={styles.participantName}>
-                          {p.id === user?.id ? `${p.name} (You)` : p.name}
-                        </p>
-                        <p className={`${styles.participantRole} ${styles.participantRoleTeam}`}>{p.role}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Bot */}
-              <div className={styles.participantGroup}>
-                <p className={`${styles.participantGroupLabel} ${styles.participantGroupLabelBot}`}>Automations</p>
-                <div className={`${styles.participantItem} ${styles.participantItemBot}`}>
-                  <div className={styles.participantItemInfo}>
-                    <div className={styles.participantAvatar}>
-                      <div className={`${styles.participantAvatarImg} ${styles.participantAvatarBot}`}>
-                        <span className="material-symbols-outlined" style={{ fontSize: 14, color: '#2dd4bf' }}>smart_toy</span>
-                      </div>
-                    </div>
-                    <div>
-                      <p className={styles.participantName}>{participants.bot.name}</p>
-                      <p className={`${styles.participantRole} ${styles.participantRoleBot}`}>{participants.bot.role}</p>
-                    </div>
-                  </div>
-                  <span className={styles.participantPulse} />
-                </div>
-              </div>
             </div>
 
             {/* ── Switch Client Section (staff/admin only) ── */}

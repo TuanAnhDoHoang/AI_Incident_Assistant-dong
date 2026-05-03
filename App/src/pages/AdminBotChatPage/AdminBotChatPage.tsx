@@ -70,33 +70,122 @@ export default function AdminBotChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Bot sends periodic reports (every 15s)
+  // Bot sends real incident reports (every 15s)
   useEffect(() => {
-    const interval = setInterval(() => {
-      const idx = reportIndex.current % BOT_REPORTS.length;
-      reportIndex.current++;
-      setMessages(prev => [...prev, {
-        id: `report-${Date.now()}`,
-        sender: 'bot',
-        content: BOT_REPORTS[idx],
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isReport: true,
-      }]);
-    }, 15000);
+    const fetchIncidents = async () => {
+      const API_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8080/api';
+      try {
+        const res = await fetch(`${API_URL}/incidents`);
+        if (!res.ok) return;
+        const incidents: any[] = await res.json();
+
+        const nowMs = Date.now();
+
+        // 1. Alert for NEW Incidents
+        const recentBugs = incidents.filter(inc => {
+          const createdAt = new Date(inc.createdAt).getTime();
+          return (nowMs - createdAt) < 60000;
+        });
+
+        if (recentBugs.length > 0) {
+          recentBugs.forEach(bug => {
+            setMessages(prev => {
+              if (prev.some(m => m.id.includes(`new-${bug.jiraIssueKey}`))) return prev;
+              return [...prev, {
+                id: `new-${bug.jiraIssueKey}-${Date.now()}`,
+                sender: 'bot',
+                content: `🚨 **NEW INCIDENT DETECTED**\n\nTicket: ${bug.jiraIssueKey}\nTitle: ${bug.title}\nSeverity: ${bug.severity}\nStatus: ${bug.status}\n\nAI suggests priority dispatch for this issue.`,
+                timestamp: now(),
+                isReport: true,
+              }];
+            });
+          });
+        }
+
+        // 2. Alert for SLA Breaches (specifically for unanswered mentions)
+        const slaBreaches = incidents.filter(inc => {
+          // If breached and not resolved
+          const isBreached = inc.slaBreached || (inc.slaDeadlineAt && new Date(inc.slaDeadlineAt).getTime() < nowMs);
+          const isUnresolved = inc.status !== 'Resolved' && inc.status !== 'Closed';
+          // User request: "if client tag name of staff... too long time no reply"
+          // We check if mentionCount > 0 as a proxy for client tagging staff
+          return isBreached && isUnresolved && (inc.mentionCount > 0);
+        });
+
+        if (slaBreaches.length > 0) {
+          slaBreaches.forEach(bug => {
+            setMessages(prev => {
+              const alertId = `sla-alert-${bug.jiraIssueKey}`;
+              if (prev.some(m => m.id.startsWith(alertId))) return prev;
+              return [...prev, {
+                id: `${alertId}-${Date.now()}`,
+                sender: 'bot',
+                content: `⚠️ **SLA BREACH ALERT**\n\nTicket: ${bug.jiraIssueKey}\nStatus: ${bug.status}\n\nCritical: Client tagged staff but no response was recorded within the SLA window. Immediate intervention required.`,
+                timestamp: now(),
+                isReport: true,
+              }];
+            });
+          });
+        }
+      } catch (err) {
+        console.error('Incident poll error:', err);
+      }
+    };
+
+    const interval = setInterval(fetchIncidents, 10000); // Check every 10s
     return () => clearInterval(interval);
   }, []);
 
-  const handleSend = useCallback(() => {
+  const handleSend = useCallback(async () => {
     if (!input.trim()) return;
+    const query = input.trim();
     setMessages(prev => [...prev, {
       id: `admin-${Date.now()}`,
       sender: 'admin',
-      content: input,
+      content: query,
       timestamp: now(),
     }]);
-    const query = input;
     setInput('');
 
+    const API_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8080/api';
+
+    // Handle SLA command
+    if (query.startsWith('/sla')) {
+      if (userRole !== 'admin') {
+        setMessages(prev => [...prev, {
+          id: `reply-${Date.now()}`,
+          sender: 'bot',
+          content: '🚫 Chỉ quản trị viên mới có quyền xem báo cáo SLA.',
+          timestamp: now(),
+        }]);
+        return;
+      }
+      const parts = query.split(' ');
+      const period = parts[1] || 'week';
+      try {
+        const res = await fetch(`${API_URL}/commands/report/sla?period=${period}`);
+        if (!res.ok) throw new Error('Failed');
+        const report = await res.json();
+
+        const content = `📊 **SLA Report (${report.period})**\n\n` +
+          `• Total Incidents: ${report.totalIncidents}\n` +
+          `• SLA Breaches: ${report.breachCount}\n` +
+          `• Compliance Rate: ${((1 - report.breachCount / (report.totalIncidents || 1)) * 100).toFixed(1)}%\n\n` +
+          (report.breaches.length > 0 ? `⚠️ Breaches:\n` + report.breaches.slice(0, 3).map((b: any) => `- ${b.jiraIssueKey}`).join('\n') : `✅ No breaches detected.`);
+
+        setMessages(prev => [...prev, {
+          id: `reply-${Date.now()}`,
+          sender: 'bot',
+          content,
+          timestamp: now(),
+        }]);
+        return;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Default mock behavior for other commands
     setTimeout(() => {
       setMessages(prev => [...prev, {
         id: `reply-${Date.now()}`,
@@ -185,11 +274,10 @@ export default function AdminBotChatPage() {
                       {msg.sender === 'bot' && <span className={styles.msgTime}>{msg.timestamp}</span>}
                       {msg.isReport && <span className={styles.reportTag}>REPORT</span>}
                     </div>
-                    <div className={`${styles.msgBubble} ${
-                      msg.sender === 'bot'
+                    <div className={`${styles.msgBubble} ${msg.sender === 'bot'
                         ? (msg.isReport ? styles.msgBubbleReport : styles.msgBubbleBot)
                         : styles.msgBubbleAdmin
-                    }`}>
+                      }`}>
                       <p style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</p>
                     </div>
                   </div>
@@ -202,7 +290,10 @@ export default function AdminBotChatPage() {
             <div className={styles.chatInputArea}>
               <div className={styles.chatInputWrap}>
                 <div className={styles.quickActions}>
-                  {['status', 'health', 'report', 'logs'].map(cmd => (
+                  {(userRole === 'admin'
+                    ? ['/status', '/health', '/report', '/logs', '/sla', '/security', '/cost']
+                    : ['/status', '/health', '/report']
+                  ).map(cmd => (
                     <button
                       key={cmd}
                       className={styles.quickBtn}
@@ -235,7 +326,7 @@ export default function AdminBotChatPage() {
                   <textarea
                     id="bot-chat-input"
                     className={styles.chatTextarea}
-                    placeholder="Ask the bot... (try: status, health, report, scale, logs, security, cost)"
+                    placeholder="Ask the bot... (try: /status, /health, /report, /scale, /logs, /security, /cost)"
                     rows={1}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}

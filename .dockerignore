@@ -1,0 +1,7 @@
+.git
+.gitignore
+App/node_modules
+App/dist
+App/npm-debug.log*
+AI_Incident_Assistant/target
+**/.DS_Store
